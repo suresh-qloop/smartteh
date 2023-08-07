@@ -1,0 +1,146 @@
+/* Vars
+------------------------------------------------ */
+
+@transitionSpeed: .2s;
+
+@innerPadding: 20px;
+@buttonHeight: 55px;
+@borderWidth: 3px;
+
+@green: #a5cd39;
+@darkGrey: #58595d;
+@white: #fff;
+@black: #404040;
+
+/* Reset
+------------------------------------------------ */
+
+* {
+	box-sizing: border-box;
+	padding: 0;
+	margin: 0;
+}
+
+header, footer, nav, section, article {
+	display: block;
+}
+
+button, table, td {
+	font-family: inherit;
+	font-weight: inherit;
+	font-size: inherit;
+}
+
+/* Overall styles
+------------------------------------------------ */
+
+body {
+	font-family: arial, sans-serif;
+	background-color: @white;
+	padding: 15px 30px;
+	font-size: 16px;
+	color: @black;
+}
+
+h1 {
+	text-transform: uppercase;
+	margin-bottom: 40px;
+	font-weight: bold;
+	font-size: 32px;
+}
+
+h2 {
+	margin-bottom: 20px;
+	font-weight: bold;
+	font-size: 24px;
+}
+
+h3 {
+	margin-bottom: 20px;
+	font-weight: bold;
+	font-size: 20px;
+}
+
+a {
+	transition: all @transitionSpeed;
+	text-decoration: none;
+	color: @green;
+}
+
+strong, b {
+	font-weight: bold;
+}
+
+/* Buttons
+------------------------------------------------ */
+
+.button {
+	line-height: @buttonHeight - (@borderWidth * 2);
+	background-color: fade(@darkGrey, 50%);
+	border: @borderWidth solid @darkGrey;
+	transition: all @transitionSpeed;
+	padding: 0 @innerPadding;
+	vertical-align: middle;
+	display: inline-block;
+	height: @buttonHeight;
+	font-family: inherit;
+	text-align: center;
+	font-size: 22px;
+	cursor: pointer;
+	color: @white;
+
+	&:focus,
+	&:hover,
+	&:active {
+		background-color: fade(@green, 50%);
+		border-color: @green;
+		outline: none;
+	}
+}
+
+/* Content
+------------------------------------------------ */
+
+ul, ol {
+	margin: 0 0 @innerPadding @innerPadding;
+	list-style: none;
+}
+
+ol {
+	counter-reset: list;
+	margin-left: 35px;
+
+	li {
+		counter-increment: list;
+
+		&::before {
+			content: counter(list) '.';
+			padding-right: 10px;
+			color: @green;
+		}
+	}
+}
+
+ul {
+	li {
+		padding-left: 35px;
+		position: relative;
+
+		&::before {
+			transform: translateY(-50%);
+			background-color: @green;
+			position: absolute;
+			border-radius: 50%;
+			content: '';
+			height: 7px;
+			width: 7px;
+			left: 15px;
+			top: 50%;
+		}
+	}
+}
+
+figure,
+p {
+	margin-bottom: @innerPadding;
+}

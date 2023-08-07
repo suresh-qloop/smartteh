@@ -1,0 +1,60 @@
+<IfModule mod_rewrite.c>
+	RewriteEngine On
+
+	# Redirect http://subdomain.example.org to https://subdomain.example.org
+	RewriteCond %{HTTPS} off
+	RewriteCond %{HTTP_HOST} ^(.+)\.(.+)\.(.+)$ [NC]
+	RewriteRule ^ https://%1.%2.%3%{REQUEST_URI} [L,NE,R=308]
+
+	# Redirect http[s]://example.org to https://www.example.org
+	RewriteCond %{HTTP_HOST} !^(.+)\.(.+)\.(.+)$ [NC]
+	RewriteCond %{HTTP_HOST} ^(.+)$ [NC]
+	RewriteRule ^ https://www.%1%{REQUEST_URI} [L,NE,R=308]
+
+	# serve robots.test.txt for non www subdomains
+	RewriteCond %{HTTP_HOST} !^(www\.)?smartteh\.[a-z]+$ [NC]
+	RewriteRule ^robots\.txt$ robots.test.txt [L]
+
+	RewriteRule ^test(/.*)?$ / [NC,L,R=301]
+
+	RewriteRule ^lv$ / [L,R=301]
+	RewriteRule ^lv/$ / [L,R=301]
+	RewriteRule ^kategorija$ / [R=301,L]
+
+	# Disable services section
+	RewriteRule ^(en|ru|es|de|ro)/services(/.*)?$ /$1 [R=301,L]
+	RewriteRule ^pakalpojumi(/.*)?$ / [R=301,L]
+
+	# Old style /blog/* urls to new /blogs/*
+	RewriteRule ^(en|ru|es|de|ro)/blog/(.*)$ /$1/blogs/$2 [R=301,L]
+
+	RewriteRule ^(en|ru|es|de|ro)/sections/view/(.*)$ /$1/info/$2 [NC,R=301,L]
+	RewriteRule ^(lv/)?sections/view/(.*)$ /info/$2 [NC,R=301,L]
+	RewriteRule ^(en|ru|es|de|ro)/industries/index$ /$1/industries [NC,R=301,L]
+	RewriteRule ^(lv/)?industries(/index)?$ /industrijas [NC,R=301,L]
+	RewriteRule ^(en|ru|es|de|ro)/industries/view/(.*)$ /$1/industries/$2 [NC,R=301,L]
+	RewriteRule ^(en|ru|es|de|ro)/industry/(.*)$ /$1/industries/$2 [NC,R=301,L]
+	RewriteRule ^(lv/)?industries(/view)?/(.*)$ /industrijas/$3 [NC,R=301,L]
+	RewriteRule ^(en|ru|es|de|ro)/categories/index$ /$1/categories [NC,R=301,L]
+	RewriteRule ^(lv/)?categories(/index)?$ /iekartas [NC,R=301,L]
+	RewriteRule ^(en|ru|es|de|ro)/categories/view/(.*)$ /$1/categories/$2 [NC,R=301,L]
+	RewriteRule ^(en|ru|es|de|ro)/category/(.*)$ /$1/categories/$2 [NC,R=301,L]
+	RewriteRule ^(lv/)?categories(/view)?/(.*)$ /iekartas/$3 [NC,R=301,L]
+	RewriteRule ^(en|ru|es|de|ro)/products/view/(.*)$ /$1/product/$2 [NC,R=301,L]
+	RewriteRule ^(lv/)?products(/view)?/(.*)$ /iekarta/$3 [NC,R=301,L]
+	RewriteRule ^(lv/)?product/(.*)$ /iekarta/$2 [NC,R=301,L]
+
+	RewriteRule ^(lv/)?portfolio/view/(.*)$ /portfolio/$2 [NC,R=301,L]
+	RewriteRule ^lv/portfolio/(.*)$ /portfolio/$1 [NC,R=301,L]
+	RewriteRule ^(en|ru|es|de|ro)/portfolio/index$ /$1/portfolio [NC,R=301,L]
+	RewriteRule ^(lv/)?portfolio/index$ /portfolio [NC,R=301,L]
+	RewriteRule ^(en|ru|es|de|ro)/portfolio/view/(.*)$ /$1/portfolio/$2 [NC,R=301,L]
+
+	# Redirect trailing trash url to a no trailing slash version.
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteRule ^(.*)/$ /$1 [L,R=301]
+
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteRule ^(.*)$ index.php [QSA,L]
+</IfModule>

@@ -1,0 +1,156 @@
+msgid "Apraksts:"
+msgstr "Descriere:"
+
+msgid "Atpakaļ uz sākumu"
+msgstr "Înapoi"
+
+msgid "E-pasts"
+msgstr "Email"
+
+msgid "Galerija"
+msgstr "Galerie"
+
+msgid "Iekārtas"
+msgstr "Echipament"
+
+msgid "Industrijas"
+msgstr "Industrii"
+
+msgid "Jautājumi?"
+msgstr "ÎNTREBĂRI?"
+
+msgid "Kontakti"
+msgstr "Contacte"
+
+msgid "Lasīt vairāk"
+msgstr "Citiți mai multe"
+
+msgid "Lasīt vairāk."
+msgstr "Citiți mai multe"
+
+msgid "Mūsu rekvizīti"
+msgstr "Informații utile"
+
+msgid "Par mums"
+msgstr "Despre noi"
+
+msgid "Portfolio"
+msgstr "Portfoliu "
+
+msgid "Ražotājs:"
+msgstr "Producător:"
+
+msgid "Rekvizīti"
+msgstr "Informații utile"
+
+msgid "Sūtīt vēstuli"
+msgstr "Trimitere mesaj"
+
+msgid "Uzņēmums"
+msgstr "Companie"
+
+msgid "Ziņa"
+msgstr "Mesaj"
+
+msgid "Aizvērt"
+msgstr "Închide"
+
+msgid "Aktuālie piedāvājumi"
+msgstr "Promoții"
+
+msgid "Bildes"
+msgstr "Foto"
+
+msgid "Citāti"
+msgstr "Citate"
+
+msgid "E-pasts nosūtīts veiksmīgi."
+msgstr "Email trimis"
+
+msgid "Es gribu meklēt..."
+msgstr "Vreau să caut"
+
+msgid "Kā mēs varam Jums palīdzēt?"
+msgstr "Cum vă putem ajuta?"
+
+msgid "Kļūda! E-pasts netika nosūtīts."
+msgstr "Eroare"
+
+msgid "Lejupielādēt PDF"
+msgstr "Descarca PDF"
+
+msgid "Linki nav atļauti"
+msgstr "Link-urile nu sunt permise"
+
+msgid "Lūdzu, ievadiet korektu e-pastu"
+msgstr "Vă rog, introduceți e-mailul corect"
+
+msgid "Lūdzu, ievadiet uzņēmuma nosaukumu"
+msgstr "Vă rog, introduceți un nume de companie"
+
+msgid "Lūdzu, ievadiet ziņas tekstu"
+msgstr "Vă rog, introduceți textul mesajului"
+
+msgid "Lūdzu, norādiet korektu e-pastu"
+msgstr "Vă rog, introduceți e-mailul corect"
+
+msgid "Meklēt"
+msgstr "Căutare"
+
+msgid "Mūsu partneri"
+msgstr "Partenerii"
+
+msgid "Nav rezultātu"
+msgstr "Fara rezultate"
+
+msgid "Nosūti draugam..."
+msgstr "Trimiteți unui prieten ..."
+
+msgid "Nākamā"
+msgstr "Următor"
+
+msgid "Paldies! Jūsu ziņa ir nosūtīta."
+msgstr "Mulțumesc!"
+
+msgid "Palielināt"
+msgstr "Maximaliza"
+
+msgid "Partneri"
+msgstr "Partenerii"
+
+msgid "Piedāvājumi"
+msgstr "Promoții"
+
+msgid "Samazināt"
+msgstr "Minimaliza"
+
+msgid "Sazinies ar mums"
+msgstr "Contactați-ne"
+
+msgid "Spams!"
+msgstr "SPAM"
+
+msgid "Telefons"
+msgstr "Telefon"
+
+msgid "Unsubscribe"
+msgstr "De dezabonare"
+
+msgid "Uz augšu"
+msgstr "Înapoi sus"
+
+msgid "Uzdot jautājumu"
+msgstr "Contactați-ne"
+
+msgid "Blogs"
+msgstr "Blogul"
+
+msgid "Neviens ieraksts vēl nav pievienots"
+msgstr ""
+
+msgid "Saistītie raksti"
+msgstr ""
+
+msgid "Skatīt visus"
+msgstr "Citeste mai mult"
+

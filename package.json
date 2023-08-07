@@ -1,0 +1,16 @@
+{
+	"private": true,
+	"devDependencies": {
+		"lessc": "^1.0",
+		"uglify-js": "^3.10"
+	},
+	"scripts": {
+		"migrate": "Console/cake Migrations.migration run all",
+		"migrate:rollback": "Console/cake Migrations.migration run down",
+		"migrate:generate": "Console/cake Migrations.migration generate --compare",
+		"githooks": "cd _infrastructure && ./install-githooks && cd ..",
+		"build": "./build-assets",
+		"prod": "./build-assets"
+	},
+	"dependencies": {}
+}

@@ -1,0 +1,5 @@
+node_modules/*
+Vendor/*
+.env
+.idea
+Config/asset_compress.local.ini

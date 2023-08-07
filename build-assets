@@ -1,0 +1,6 @@
+#!/bin/bash
+
+Console/cake AssetCompress.AssetCompress clear
+Console/cake AssetCompress.AssetCompress build
+
+./node_modules/.bin/lessc webroot/css/admin/editor.less > webroot/build/css/editor.css

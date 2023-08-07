@@ -1,0 +1,43 @@
+# To update image, visit https://bitbucket.org/migbaltic/pipelines/src/master/
+image: migbaltic/mig:v8
+
+definitions:
+  steps:
+    - step: &Test
+        name: Build and test
+        caches:
+          - composer
+        script:
+          - cp .env.example .env
+          - composer install
+          - composer run tests
+    - step: &DeployProduction
+        name: Deploy to production
+        script:
+          - cat ./update.sh | ssh -p $PRODUCTION_SERVER_PORT migbalticsmartteh@$PRODUCTION_SERVER_IP "cd /var/www/smartteh.eu/web ; bash -e"
+          - echo "Deploy finished"
+    - step: &DeployStaging
+        name: Deploy to staging
+        script:
+          - cat ./update.sh | ssh -p $STAGING_SERVER_PORT migbalticsmarttehtest@$STAGING_SERVER_IP "cd /var/www/test.smartteh.eu/web ; bash -e"
+          - echo "Deploy finished"
+
+pipelines:
+  pull-requests:
+    '**':
+      - step: *Test
+
+  custom:
+    deploy-staging:
+      - step: *DeployStaging
+    deploy-production:
+      - step: *DeployProduction
+
+  branches:
+    master:
+      - step: *Test
+      - step: *DeployProduction
+
+    staging:
+      - step: *Test
+      - step: *DeployStaging

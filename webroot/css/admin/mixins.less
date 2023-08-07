@@ -1,0 +1,36 @@
+.linear-gradient(@from, @to) {
+	background: linear-gradient(to bottom, @from 0%, @to 100%);
+}
+
+.linear-gradient(@from, @to, @stop1, @stop2) {
+	background: linear-gradient(to bottom, @from @stop1, @to @stop2);
+}
+
+.linear-gradient-horizontal(@from, @to) {
+	background: linear-gradient(to right, @from 0%, @to 100%);
+}
+
+.linear-gradient-horizontal(@from, @to, @stop1, @stop2) {
+	background: linear-gradient(to right, @from @stop1, @to @stop2);
+}
+
+.display-inline-block {
+	vertical-align: middle;
+	display: inline-block;
+}
+
+.ellipsis {
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+.fit-container() {
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	bottom: 0;
+	right: 0;
+	left: 0;
+	top: 0;
+}

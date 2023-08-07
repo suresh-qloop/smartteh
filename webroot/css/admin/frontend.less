@@ -1,0 +1,122 @@
+/* Mixins
+------------------------------------------------ */
+@import "mixins.less";
+
+/* Main styles
+------------------------------------------------ */
+
+#admin-tools {
+	box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+	background-color: #333;
+	transition: all .2s;
+	visibility: hidden;
+	line-height: 50px;
+	list-style: none;
+	position: fixed;
+	font-size: 28px;
+	z-index: 9999;
+	opacity: .5;
+	left: -45px;
+	width: 50px;
+	padding: 0;
+	margin: 0;
+	top: 0;
+
+	&:hover {
+		opacity: 1;
+		left: 0;
+	}
+
+	li {
+		border-top: 1px solid #585858;
+		position: relative;
+		color: #fff;
+
+		&:hover {
+			.toolbar-title {
+				display: block;
+			}
+		}
+	}
+
+	.toolbar-icon {
+		text-decoration: none;
+		line-height: inherit;
+		font-size: inherit;
+		text-align: center;
+		display: block;
+		color: inherit;
+		height: 100%;
+
+		&:hover {
+			background-color: #222;
+			text-decoration: none;
+		}
+	}
+
+	.toolbar-title {
+		box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+		border-bottom-right-radius: 4px;
+		border-top-right-radius: 4px;
+		background-color: #222;
+		vertical-align: middle;
+		padding: 0 20px 0 10px;
+		white-space: nowrap;
+		position: absolute;
+		margin-top: -15px;
+		line-height: 30px;
+		font-size: 14px;
+		display: none;
+		height: 30px;
+		left: 65px;
+		top: 50%;
+
+		&:before {
+			border-bottom: 15px solid transparent;
+			border-top: 15px solid transparent;
+			border-right: 10px solid #222;
+			position: absolute;
+			left: -10px;
+			content: "";
+			height: 0;
+			width: 0;
+			top: 0;
+		}
+	}
+}
+
+.admin-page-tools {
+	box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+	background-color: #333;
+	transition: all .2s;
+	position: absolute;
+	z-index: 999;
+	opacity: .5;
+	right: 1px;
+
+	&:hover {
+		opacity: 1;
+	}
+
+	a {
+		border-left: 1px solid #585858;
+		text-decoration: none;
+		text-align: center;
+		line-height: 50px;
+		font-size: 28px;
+		color: inherit;
+		height: 50px;
+		width: 50px;
+		float: left;
+		color: #fff;
+
+		&:hover {
+			background-color: #222;
+			text-decoration: none;
+		}
+
+		&:first-child {
+			border-left: 0;
+		}
+	}
+}

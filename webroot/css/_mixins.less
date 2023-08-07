@@ -1,0 +1,44 @@
+.placeholder-color(@color) {
+	&::-webkit-input-placeholder {
+		color: @color;
+	}
+
+	&:-moz-placeholder {
+		color: @color;
+		opacity: 1;
+	}
+
+	&::-moz-placeholder {
+		color: @color;
+		opacity: 1;
+	}
+
+	&:-ms-input-placeholder {
+		color: @color;
+	}
+
+	&:placeholder-shown {
+		color: @color;
+	}
+}
+
+.display-inline-block {
+	vertical-align: middle;
+	display: inline-block;
+}
+
+.ellipsis {
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+.fit-container() {
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	bottom: 0;
+	right: 0;
+	left: 0;
+	top: 0;
+}

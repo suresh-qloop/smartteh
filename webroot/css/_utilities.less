@@ -1,0 +1,25 @@
+@import '_variables';
+
+.p-xs {
+	padding: @padding_xs;
+}
+
+.show-on-mobile {
+	display: none;
+
+	@media screen and (max-width: (@mobile_portrait - 1px)) {
+		display: block;
+	}
+}
+
+.h-230 {
+	height: 230px !important;
+}
+
+.w-full {
+	width: 100% !important;
+}
+
+.w-6\/12 {
+	width: 50%;
+}
