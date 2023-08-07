@@ -42,7 +42,7 @@ class ProductsController extends AppController
 			}
 
 			$this->redirect(['controller' => 'start', 'action' => 'index', 'lang' => $this->lang]);
-			throw new NotFoundException();
+			// throw new NotFoundException();
 		}
 
 		$from = $this->request->query['from'] ?? '';

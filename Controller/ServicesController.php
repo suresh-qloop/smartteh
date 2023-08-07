@@ -39,7 +39,7 @@ class ServicesController extends AppController
 	 */
 	public function view(string $strid): void
 	{
-
+		// $this->tempRedirect($this->lang);
 		$this->redirectFromIdToStrid($this->Service, $strid, 'strid_' . $this->lang);
 
 		$data = $this->Service->findByStrid($strid, $this->lang);

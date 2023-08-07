@@ -15,7 +15,8 @@ class IndustriesController extends AppController
 	/**
 	 * @return void
 	 */
-	public function index(): void {
+	public function index(): void
+	{
 		$data = $this->Industry->getFirst();
 
 		if (!$data) {
@@ -25,14 +26,16 @@ class IndustriesController extends AppController
 		// to correctly fetch metatags
 		$this->request->action = 'view';
 
-		$this->view($data['Industry']['strid_'.$this->lang]);
+		$this->view($data['Industry']['strid_' . $this->lang]);
 	}
 
 	/**
 	 * @param string $strid
 	 */
-	public function view(string $strid): void {
-		$this->redirectFromIdToStrid($this->Industry, $strid, 'strid_'.$this->lang);
+	public function view(string $strid): void
+	{
+		// $this->tempRedirect($this->lang);
+		$this->redirectFromIdToStrid($this->Industry, $strid, 'strid_' . $this->lang);
 
 		$data = $this->Industry->findByStrid($strid, $this->lang);
 
@@ -43,18 +46,19 @@ class IndustriesController extends AppController
 			foreach (array_keys($langs) as $lang) {
 				$data = $this->Industry->findByStrid($strid, $lang);
 				if ($data && in_array($this->lang, $data['Industry']['translated'], true)) {
-					$this->redirect(['action' => 'view', $data['Industry']['strid_'.$this->lang]]);
+					$this->redirect(['action' => 'view', $data['Industry']['strid_' . $this->lang]]);
 				}
 			}
 
-			throw new NotFoundException();
+			$this->redirect(['controller' => 'start', 'action' => 'index', 'lang' => $this->lang]);
+			// throw new NotFoundException();
 		}
 
 		$page_header_image = $this->Industry->getHeaderImage($data);
 
 		$bc = [$data['Industry']['id']];
 
-		$heading = $this->Industry->getValue($bc[0], 'title_'.$this->lang);
+		$heading = $this->Industry->getValue($bc[0], 'title_' . $this->lang);
 
 		$products = $this->Product->getAllActiveInIndustry($this->lang, $data['Industry']['id']);
 
@@ -67,7 +71,15 @@ class IndustriesController extends AppController
 		$breadcrumbs = $this->Industry->getFullBreadcrumbs($data['Industry']['id'], $this->lang);
 
 		$this->set(compact(
-			'data', 'bc', 'heading', 'products', 'portfolio', 'articles', 'page_header_image', 'robots_noindex', 'breadcrumbs'
+			'data',
+			'bc',
+			'heading',
+			'products',
+			'portfolio',
+			'articles',
+			'page_header_image',
+			'robots_noindex',
+			'breadcrumbs'
 		));
 
 		$this->render('view');
@@ -78,7 +90,8 @@ class IndustriesController extends AppController
 	/**
 	 * @return void
 	 */
-	public function admin_index(): void {
+	public function admin_index(): void
+	{
 		$search = $this->manageSearchRequest();
 
 		$data = $this->Industry->adminList($this, 20, $search);
@@ -89,7 +102,8 @@ class IndustriesController extends AppController
 	/**
 	 * @return void
 	 */
-	public function admin_create(): void {
+	public function admin_create(): void
+	{
 		if ($this->request->is('post')) {
 			if ($this->Industry->save($this->request->data)) {
 				$this->Flash->success(__d('admin', 'MSG_OK'));
@@ -105,7 +119,8 @@ class IndustriesController extends AppController
 	 *
 	 * @return void
 	 */
-	public function admin_update(int $id): void {
+	public function admin_update(int $id): void
+	{
 		if ($this->request->is(['post', 'put'])) {
 			if ($this->Industry->save($this->request->data)) {
 				$this->Flash->success(__d('admin', 'MSG_OK'));
@@ -127,7 +142,8 @@ class IndustriesController extends AppController
 	 *
 	 * @return void
 	 */
-	public function admin_metatags(int $id): void {
+	public function admin_metatags(int $id): void
+	{
 		$this->request->data = $this->Metatag->getData([
 			'lang' => $this->lang,
 			'controller' => $this->request->controller,
@@ -145,7 +161,8 @@ class IndustriesController extends AppController
 	 * @return void
 	 * @throws Exception
 	 */
-	public function admin_active(int $id, bool $enabled = null): void {
+	public function admin_active(int $id, bool $enabled = null): void
+	{
 		$success = $this->Industry->active($id, $enabled);
 		$this->actionResponse($success);
 	}
@@ -156,7 +173,8 @@ class IndustriesController extends AppController
 	 * @return void
 	 * @throws Exception
 	 */
-	public function admin_moveup(int $id): void {
+	public function admin_moveup(int $id): void
+	{
 		$success = $this->Industry->moveup($id);
 		$this->actionResponse($success);
 	}
@@ -167,7 +185,8 @@ class IndustriesController extends AppController
 	 * @return void
 	 * @throws Exception
 	 */
-	public function admin_movedown(int $id): void {
+	public function admin_movedown(int $id): void
+	{
 		$success = $this->Industry->movedown($id);
 		$this->actionResponse($success);
 	}
@@ -178,7 +197,8 @@ class IndustriesController extends AppController
 	 * @return void
 	 * @throws Exception
 	 */
-	public function admin_delete(int $id): void {
+	public function admin_delete(int $id): void
+	{
 		$this->Industry->delete($id);
 		$this->actionResponse(true, ['action' => 'index']);
 	}

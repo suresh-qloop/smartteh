@@ -18,6 +18,7 @@ class SectionsController extends AppController
 	public function view(string $strid): void
 	{
 
+		// $this->tempRedirect($this->lang);
 		$this->redirectFromIdToStrid($this->Section, $strid, 'strid_' . $this->lang);
 
 		$data = $this->Section->findByStrid($strid, $this->lang);
@@ -33,7 +34,8 @@ class SectionsController extends AppController
 				}
 			}
 
-			throw new NotFoundException();
+			$this->redirect(['controller' => 'start', 'action' => 'index', 'lang' => $this->lang]);
+			// throw new NotFoundException();
 		}
 
 

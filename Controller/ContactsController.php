@@ -15,7 +15,8 @@ class ContactsController extends AppController
 	/**
 	 * @return void
 	 */
-	public function index(): void {
+	public function index(): void
+	{
 		if (!$this->request->is('post')) {
 			throw new BadRequestException();
 		}
@@ -33,7 +34,6 @@ class ContactsController extends AppController
 			}
 
 			$this->set(['success' => true, 'hash' => md5(Utils::uuid4())]);
-
 		} else {
 			$this->set('error', $this->Contacts->validationErrors);
 		}
@@ -51,7 +51,8 @@ class ContactsController extends AppController
 		}
 	}
 
-	public function updateFormSubmitTracking(string $url): bool {
+	public function updateFormSubmitTracking(string $url): bool
+	{
 		$data['img'] = '';
 		$data['url'] = $url;
 		if (strpos($url, "?") > -1) {
@@ -67,7 +68,6 @@ class ContactsController extends AppController
 		}
 
 		return true;
-
 	}
 
 	/**
@@ -75,7 +75,8 @@ class ContactsController extends AppController
 	 *
 	 * @return void
 	 */
-	private function notifyAdminViaEmail(int $id): void {
+	private function notifyAdminViaEmail(int $id): void
+	{
 		$to = $this->Setting->getValue('contacts-email', 'value');
 
 		if (!$to) {
@@ -100,7 +101,8 @@ class ContactsController extends AppController
 	 *
 	 * @return void
 	 */
-	public function admin_view(int $id): void {
+	public function admin_view(int $id): void
+	{
 		$data = $this->Contacts->getOrFail($id, ['Product']);
 		$this->set(compact('data', 'id'));
 	}
@@ -108,7 +110,8 @@ class ContactsController extends AppController
 	/**
 	 * @return void
 	 */
-	public function admin_index(): void {
+	public function admin_index(): void
+	{
 		$search = $this->manageSearchRequest();
 		$data = $this->Contacts->adminList($this, 20, $search);
 		$this->set(compact('data'));
@@ -120,7 +123,8 @@ class ContactsController extends AppController
 	 * @return void
 	 * @throws Exception
 	 */
-	public function admin_delete(int $id): void {
+	public function admin_delete(int $id): void
+	{
 		$this->Contacts->delete($id);
 		$this->actionResponse(true, ['action' => 'index']);
 	}

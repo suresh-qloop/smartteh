@@ -12,7 +12,7 @@ class SitemapController extends AppController
 	/**
 	 * @var array
 	 */
-	public $uses = ['Section', 'Product', 'Category', 'Industry', 'Service'];
+	public $uses = ['Section', 'Product', 'Category', 'Industry', 'Service', 'Article', 'Portfolio'];
 
 	/**
 	 * @var array
@@ -39,10 +39,16 @@ class SitemapController extends AppController
 		$urls = array_merge($urls, $this->moduleUrls('industries'));
 		$urls = array_merge($urls, $this->moduleUrls('categories'));
 		$urls = array_merge($urls, $this->moduleUrls('services'));
+		$urls = array_merge($urls, $this->moduleUrls('article'));
+		$urls = array_merge($urls, $this->moduleUrls('portfolio'));
 		$urls = array_merge($urls, $this->sectionUrls());
 		$urls = array_merge($urls, $this->categoriesUrls());
 		$urls = array_merge($urls, $this->industriesUrls());
 		$urls = array_merge($urls, $this->productsUrls());
+		$urls = array_merge($urls, $this->servicesUrls());
+		$urls = array_merge($urls, $this->articlesUrls());
+		$urls = array_merge($urls, $this->portfoliosUrls());
+
 
 		$sitemap = [
 			'urlset' => [
@@ -75,7 +81,6 @@ class SitemapController extends AppController
 				$url['xhtml:link'] = [];
 				foreach ($this->relatedLangs($lang) as $related_lang) {
 					$url['xhtml:link'][] = [
-
 						'@rel' => 'alternate',
 						'@hreflang' => $related_lang,
 						'@href' => Router::url(['lang' => $related_lang, 'controller' => $controller, 'action' => 'index'], true)
@@ -260,6 +265,141 @@ class SitemapController extends AppController
 								'@rel' => 'alternate',
 								'@hreflang' => $related_lang,
 								'@href' => Router::url(['lang' => $related_lang, 'controller' => 'products', 'action' => 'view', $v['Product']['strid_' . $related_lang]], true)
+							];
+						}
+					}
+				}
+
+				$urls[] = $url;
+			}
+		}
+
+		return $urls;
+	}
+
+	private function servicesUrls(): array
+	{
+		$urls = [];
+
+		$fields = array_map(static function ($lang) {
+			return 'strid_' . $lang;
+		}, $this->langs);
+		$fields[] = 'translated';
+
+		$data = $this->Service->find('all', [
+			'conditions' => ['enabled' => 1],
+			'fields' => $fields
+		]);
+
+		foreach ($data as $v) {
+			$langs = array_intersect($this->langs, $v['Service']['translated']);
+
+
+			foreach ($langs as $lang) {
+				$url = [
+					'loc' => Router::url(['lang' => $lang, 'controller' => 'services', 'action' => 'view', $v['Service']['strid_' . $lang]], true),
+					'changefreq' => 'daily'
+				];
+
+				if ($this->output_related_langs) {
+
+					$related_langs = array_intersect($this->relatedLangs($lang), $v['Service']['translated']);
+					if ($related_langs) {
+						$url['xhtml:link'] = [];
+						foreach ($related_langs as $related_lang) {
+							$url['xhtml:link'][] = [
+								'@rel' => 'alternate',
+								'@hreflang' => $related_lang,
+								'@href' => Router::url(['lang' => $related_lang, 'controller' => 'services', 'action' => 'view', $v['Service']['strid_' . $related_lang]], true)
+							];
+						}
+					}
+				}
+
+				$urls[] = $url;
+			}
+		}
+
+		return $urls;
+	}
+
+	private function articlesUrls(): array
+	{
+		$urls = [];
+
+		$fields = array_map(static function ($lang) {
+			return 'strid_' . $lang;
+		}, $this->langs);
+		$fields[] = 'translated';
+
+		$data = $this->Article->find('all', [
+			'fields' => $fields
+		]);
+
+		foreach ($data as $v) {
+			$langs = array_intersect($this->langs, $v['Article']['translated']);
+
+
+			foreach ($langs as $lang) {
+				$url = [
+					'loc' => Router::url(['lang' => $lang, 'controller' => 'articles', 'action' => 'view', $v['Article']['strid_' . $lang]], true),
+					'changefreq' => 'daily'
+				];
+
+				if ($this->output_related_langs) {
+
+					$related_langs = array_intersect($this->relatedLangs($lang), $v['Article']['translated']);
+					if ($related_langs) {
+						$url['xhtml:link'] = [];
+						foreach ($related_langs as $related_lang) {
+							$url['xhtml:link'][] = [
+								'@rel' => 'alternate',
+								'@hreflang' => $related_lang,
+								'@href' => Router::url(['lang' => $related_lang, 'controller' => 'articles', 'action' => 'view', $v['Article']['strid_' . $related_lang]], true)
+							];
+						}
+					}
+				}
+
+				$urls[] = $url;
+			}
+		}
+
+		return $urls;
+	}
+
+	private function portfoliosUrls(): array
+	{
+		$urls = [];
+
+		$fields = array_map(static function ($lang) {
+			return 'strid_' . $lang;
+		}, $this->langs);
+		$fields[] = 'translated';
+
+		$data = $this->Portfolio->find('all', [
+			'fields' => $fields
+		]);
+
+		foreach ($data as $v) {
+			$langs = array_intersect($this->langs, $v['Portfolio']['translated']);
+
+			foreach ($langs as $lang) {
+				$url = [
+					'loc' => Router::url(['lang' => $lang, 'controller' => 'portfolio', 'action' => 'view', $v['Portfolio']['strid_' . $lang]], true),
+					'changefreq' => 'daily'
+				];
+
+				if ($this->output_related_langs) {
+
+					$related_langs = array_intersect($this->relatedLangs($lang), $v['Portfolio']['translated']);
+					if ($related_langs) {
+						$url['xhtml:link'] = [];
+						foreach ($related_langs as $related_lang) {
+							$url['xhtml:link'][] = [
+								'@rel' => 'alternate',
+								'@hreflang' => $related_lang,
+								'@href' => Router::url(['lang' => $related_lang, 'controller' => 'portfolio', 'action' => 'view', $v['Portfolio']['strid_' . $related_lang]], true)
 							];
 						}
 					}

@@ -29,7 +29,12 @@ $title_suffix = !empty($is_frontpage) ? '' : ' | SmartTEH';
 	<link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:400|Roboto:300,300i,400&amp;subset=cyrillic,latin-ext" rel="stylesheet" />
 
 	<link rel="icon" href="/favicon.gif?v=2" />
-	<link rel="alternate" href="<?= Router::url($this->here, true) ?>" hreflang="<?= $lang ?>" />
+	<!-- <link rel="alternate" href="<?= Router::url($this->here, true) ?>" hreflang="<?= $lang ?>" /> -->
+	<link rel="alternate" href="<?= Router::url($this->here, true) ?>" hreflang="lv" />
+	<link rel="alternate" href="<?= Router::url($this->here, true) ?>" hreflang="ru" />
+	<link rel="alternate" href="<?= Router::url($this->here, true) ?>" hreflang="en" />
+	<link rel="alternate" href="<?= Router::url($this->here, true) ?>" hreflang="es" />
+	<link rel="alternate" href="<?= Router::url($this->here, true) ?>" hreflang="de" />
 
 	<?php if ($this->Html->isTestSite()) : ?>
 		<meta name="robots" content="noindex, follow" />
