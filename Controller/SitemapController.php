@@ -29,8 +29,7 @@ class SitemapController extends AppController
 	 *
 	 * @return void
 	 */
-	public function index(): void
-	{
+	public function index(): void {
 		$this->langs = array_keys(Configure::read('Languages.all'));
 
 		$urls = [];
@@ -68,8 +67,7 @@ class SitemapController extends AppController
 	 *
 	 * @return array
 	 */
-	private function moduleUrls(string $controller): array
-	{
+	private function moduleUrls(string $controller): array {
 		$urls = [];
 		foreach ($this->langs as $lang) {
 			$url = [
@@ -97,8 +95,7 @@ class SitemapController extends AppController
 	/**
 	 * @return array
 	 */
-	private function sectionUrls(): array
-	{
+	private function sectionUrls(): array {
 		$urls = [];
 
 		$fields = array_map(static function ($lang) {
@@ -127,8 +124,7 @@ class SitemapController extends AppController
 	/**
 	 * @return array
 	 */
-	private function categoriesUrls(): array
-	{
+	private function categoriesUrls(): array {
 		$urls = [];
 
 		$fields = array_map(static function ($lang) {
@@ -176,8 +172,7 @@ class SitemapController extends AppController
 	 *
 	 * @return array
 	 */
-	private function relatedLangs(string $lang): array
-	{
+	private function relatedLangs(string $lang): array {
 		return array_filter($this->langs, static function ($this_lang) use ($lang) {
 			return $this_lang !== $lang;
 		});
@@ -186,8 +181,7 @@ class SitemapController extends AppController
 	/**
 	 * @return array
 	 */
-	private function industriesUrls(): array
-	{
+	private function industriesUrls(): array {
 		$urls = [];
 
 		$fields = array_map(static function ($lang) {
@@ -233,8 +227,7 @@ class SitemapController extends AppController
 	/**
 	 * @return array
 	 */
-	private function productsUrls(): array
-	{
+	private function productsUrls(): array {
 		$urls = [];
 
 		$fields = array_map(static function ($lang) {
@@ -277,8 +270,7 @@ class SitemapController extends AppController
 		return $urls;
 	}
 
-	private function servicesUrls(): array
-	{
+	private function servicesUrls(): array {
 		$urls = [];
 
 		$fields = array_map(static function ($lang) {
@@ -323,8 +315,7 @@ class SitemapController extends AppController
 		return $urls;
 	}
 
-	private function articlesUrls(): array
-	{
+	private function articlesUrls(): array {
 		$urls = [];
 
 		$fields = array_map(static function ($lang) {
@@ -368,8 +359,7 @@ class SitemapController extends AppController
 		return $urls;
 	}
 
-	private function portfoliosUrls(): array
-	{
+	private function portfoliosUrls(): array {
 		$urls = [];
 
 		$fields = array_map(static function ($lang) {

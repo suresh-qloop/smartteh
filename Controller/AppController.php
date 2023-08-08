@@ -26,8 +26,7 @@ class AppController extends Controller
 	 *
 	 * @return void
 	 */
-	public function beforeFilter()
-	{
+	public function beforeFilter() {
 
 		$this->loadLanguage();
 
@@ -62,8 +61,7 @@ class AppController extends Controller
 	 *
 	 * @return void
 	 */
-	public function beforeRender()
-	{
+	public function beforeRender() {
 		if ($this->name === 'CakeError') {
 			$this->layout = 'error';
 
@@ -118,8 +116,7 @@ class AppController extends Controller
 	 *
 	 * @return CakeResponse|null
 	 */
-	public function redirect($url, $status = null, $exit = true)
-	{
+	public function redirect($url, $status = null, $exit = true) {
 		if (is_array($url) && !isset($url['lang'])) {
 			$url['lang'] = $this->lang;
 		}
@@ -132,8 +129,7 @@ class AppController extends Controller
 	 *
 	 * @return void
 	 */
-	public function afterFilter()
-	{
+	public function afterFilter() {
 		$this->clearCacheIfNeeded();
 	}
 
@@ -146,8 +142,7 @@ class AppController extends Controller
 	 *
 	 * @return void
 	 */
-	public function beforeRedirect($url, $status = null, $exit = true)
-	{
+	public function beforeRedirect($url, $status = null, $exit = true) {
 		$this->clearCacheIfNeeded();
 	}
 
@@ -157,8 +152,7 @@ class AppController extends Controller
 	 *
 	 * @return void
 	 */
-	public function clearCacheIfNeeded(): void
-	{
+	public function clearCacheIfNeeded(): void {
 		if (!Configure::read('Cache.check')) {
 			return;
 		}
@@ -197,8 +191,7 @@ class AppController extends Controller
 	 *
 	 * @return void
 	 */
-	public function loadLanguage(): void
-	{
+	public function loadLanguage(): void {
 		// if language is not set, set default
 		if ($this->request->lang) {
 			$this->lang = $this->request->lang;
@@ -230,8 +223,7 @@ class AppController extends Controller
 	 *
 	 * @return bool
 	 */
-	public function sendEmail(array $settings = [], array $view_vars = null): bool
-	{
+	public function sendEmail(array $settings = [], array $view_vars = null): bool {
 		$email = new EmailTask();
 
 		return $email->send($settings, $view_vars);
@@ -244,8 +236,7 @@ class AppController extends Controller
 	 *
 	 * @return void
 	 */
-	public function jsonResponse(array $response = []): void
-	{
+	public function jsonResponse(array $response = []): void {
 		die(json_encode($response));
 	}
 
@@ -259,8 +250,7 @@ class AppController extends Controller
 	 *
 	 * @return void
 	 */
-	public function jsonError(string $description = null, string $title = null): void
-	{
+	public function jsonError(string $description = null, string $title = null): void {
 		if ($title === null) {
 			$title = __d('admin', 'Error occured!');
 		}
@@ -278,8 +268,7 @@ class AppController extends Controller
 	 *
 	 * @return void
 	 */
-	public function jsonSuccess(string $description = null): void
-	{
+	public function jsonSuccess(string $description = null): void {
 		$this->jsonResponse(['status' => 1, 'description' => $description]);
 	}
 
@@ -289,8 +278,7 @@ class AppController extends Controller
 	 * If request is POST, write data into Filter.X session, where X is current controller
 	 * If request is GET, load data from Filter.X session into request->data object
 	 */
-	public function manageSearchRequest()
-	{
+	public function manageSearchRequest() {
 		$key = 'Filter.' . $this->request->controller . '.' . $this->request->action;
 
 		if ($this->request->is(['post', 'put'])) {
@@ -317,8 +305,7 @@ class AppController extends Controller
 	 * @return void
 	 * @throws Exception
 	 */
-	public function actionResponse(bool $success, $redirect = null): void
-	{
+	public function actionResponse(bool $success, $redirect = null): void {
 		if (!$this->request->is('ajax')) {
 			if ($success) {
 				$this->Flash->success(__d('admin', 'MSG_OK'));
@@ -351,8 +338,7 @@ class AppController extends Controller
 	 *
 	 * @return void
 	 */
-	public function loadMetatags(): void
-	{
+	public function loadMetatags(): void {
 		$controller = $this->meta['controller'] ?? $this->request->controller;
 
 		$action = $this->meta['action'] ?? $this->request->action;
@@ -392,8 +378,7 @@ class AppController extends Controller
 	 *
 	 * @return string Rendered html
 	 */
-	public function getRenderedElement(string $file, array $data = []): string
-	{
+	public function getRenderedElement(string $file, array $data = []): string {
 		$this->autoRender = false;
 		$view = new View($this, false);
 		foreach ($data as $k => $v) {
@@ -413,8 +398,7 @@ class AppController extends Controller
 	 *
 	 * @return void
 	 */
-	public function redirectFromIdToStrid($Model, string $strid, string $field = 'strid'): void
-	{
+	public function redirectFromIdToStrid($Model, string $strid, string $field = 'strid'): void {
 		if (!is_numeric($strid)) {
 			return;
 		}
@@ -436,8 +420,7 @@ class AppController extends Controller
 	 * @return void
 	 * @throws Exception
 	 */
-	public function execCommand(string $command): void
-	{
+	public function execCommand(string $command): void {
 		$output = [];
 		$exit_code = [];
 

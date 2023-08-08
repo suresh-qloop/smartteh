@@ -15,8 +15,7 @@ class ArticlesController extends AppController
 	/**
 	 * @return void
 	 */
-	public function index(string $strid = null): void
-	{
+	public function index(string $strid = null): void {
 		$conditions = [];
 		$active = '';
 		if (!empty($strid)) {
@@ -48,8 +47,7 @@ class ArticlesController extends AppController
 	 *
 	 * @return void
 	 */
-	public function view(string $strid = null): void
-	{
+	public function view(string $strid = null): void {
 		// $this->tempRedirect($this->lang);
 		if (empty($strid)) {
 			$this->redirect(['controller' => 'articles', 'action' => 'index'], 301);
@@ -83,8 +81,7 @@ class ArticlesController extends AppController
 	/**
 	 * @return void
 	 */
-	public function admin_index(): void
-	{
+	public function admin_index(): void {
 		$search = $this->manageSearchRequest();
 
 		$data = $this->Article->adminList($this, 20, $search);
@@ -96,8 +93,7 @@ class ArticlesController extends AppController
 	 * @return void
 	 * @throws Exception
 	 */
-	public function admin_create(): void
-	{
+	public function admin_create(): void {
 		if ($this->request->is('post')) {
 			if ($this->Article->save($this->request->data)) {
 				$this->Flash->success(__d('admin', 'MSG_OK'));
@@ -121,8 +117,7 @@ class ArticlesController extends AppController
 	 * @return void
 	 * @throws Exception
 	 */
-	public function admin_update(int $id): void
-	{
+	public function admin_update(int $id): void {
 		if ($this->request->is(['post', 'put'])) {
 			if ($this->Article->save($this->request->data)) {
 				$this->Flash->success(__d('admin', 'MSG_OK'));
@@ -147,8 +142,7 @@ class ArticlesController extends AppController
 	 *
 	 * @return void
 	 */
-	public function admin_metatags(int $id): void
-	{
+	public function admin_metatags(int $id): void {
 		$this->request->data = $this->Metatag->getData([
 			'lang' => $this->lang,
 			'controller' => $this->request->controller,
@@ -166,8 +160,7 @@ class ArticlesController extends AppController
 	 * @return void
 	 * @throws Exception
 	 */
-	public function admin_active(int $id, bool $enabled = null): void
-	{
+	public function admin_active(int $id, bool $enabled = null): void {
 		$success = $this->Article->active($id, $enabled);
 		$this->actionResponse($success);
 	}
@@ -178,8 +171,7 @@ class ArticlesController extends AppController
 	 * @return void
 	 * @throws Exception
 	 */
-	public function admin_delete(int $id): void
-	{
+	public function admin_delete(int $id): void {
 		$this->Article->delete($id);
 		$this->actionResponse(true, ['action' => 'index']);
 	}

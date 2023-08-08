@@ -15,8 +15,7 @@ class SectionsController extends AppController
 	/**
 	 * @param string $strid
 	 */
-	public function view(string $strid): void
-	{
+	public function view(string $strid): void {
 
 		// $this->tempRedirect($this->lang);
 		$this->redirectFromIdToStrid($this->Section, $strid, 'strid_' . $this->lang);
@@ -51,8 +50,7 @@ class SectionsController extends AppController
 	/**
 	 * @return void
 	 */
-	public function admin_index(): void
-	{
+	public function admin_index(): void {
 		$data = $this->Section->adminList($this, 20);
 		$this->set(compact('data'));
 	}
@@ -60,8 +58,7 @@ class SectionsController extends AppController
 	/**
 	 * @return void
 	 */
-	public function admin_create(): void
-	{
+	public function admin_create(): void {
 		if ($this->request->is('post')) {
 			if ($this->Section->save($this->request->data)) {
 				$this->Flash->success(__d('admin', 'MSG_OK'));
@@ -77,8 +74,7 @@ class SectionsController extends AppController
 	 *
 	 * @return void
 	 */
-	public function admin_update(int $id): void
-	{
+	public function admin_update(int $id): void {
 		if ($this->request->is(['post', 'put'])) {
 			if ($this->Section->save($this->request->data)) {
 				$this->Flash->success(__d('admin', 'MSG_OK'));
@@ -100,8 +96,7 @@ class SectionsController extends AppController
 	 *
 	 * @return void
 	 */
-	public function admin_metatags(int $id): void
-	{
+	public function admin_metatags(int $id): void {
 		$this->request->data = $this->Metatag->getData([
 			'lang' => $this->lang,
 			'controller' => $this->request->controller,
@@ -118,8 +113,7 @@ class SectionsController extends AppController
 	 * @return void
 	 * @throws Exception
 	 */
-	public function admin_delete(int $id): void
-	{
+	public function admin_delete(int $id): void {
 		$this->Section->delete($id);
 		$this->actionResponse(true, ['action' => 'index']);
 	}

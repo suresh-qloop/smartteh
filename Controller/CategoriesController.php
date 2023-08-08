@@ -15,8 +15,7 @@ class CategoriesController extends AppController
 	/**
 	 * @return void
 	 */
-	public function index(): void
-	{
+	public function index(): void {
 		$data = $this->Category->getFirst();
 
 		if (!$data) {
@@ -31,8 +30,7 @@ class CategoriesController extends AppController
 	 *
 	 * @return void
 	 */
-	public function view(string $strid): void
-	{
+	public function view(string $strid): void {
 		// $this->tempRedirect($this->lang);
 		$this->redirectFromIdToStrid($this->Category, $strid, 'strid_' . $this->lang);
 
@@ -84,8 +82,7 @@ class CategoriesController extends AppController
 	/**
 	 * @return void
 	 */
-	public function admin_index(): void
-	{
+	public function admin_index(): void {
 		$data = $this->Category->threadedToFlat(
 			$this->Category->findAllThreaded($this->lang, true)
 		);
@@ -96,8 +93,7 @@ class CategoriesController extends AppController
 	/**
 	 * @return void
 	 */
-	public function admin_create(): void
-	{
+	public function admin_create(): void {
 		if ($this->request->is('post')) {
 			if ($this->Category->save($this->request->data)) {
 				$this->Flash->success(__d('admin', 'MSG_OK'));
@@ -116,8 +112,7 @@ class CategoriesController extends AppController
 	 *
 	 * @return void
 	 */
-	public function admin_update(int $id): void
-	{
+	public function admin_update(int $id): void {
 		if ($this->request->is(['post', 'put'])) {
 			if ($this->Category->save($this->request->data)) {
 				$this->Flash->success(__d('admin', 'MSG_OK'));
@@ -140,8 +135,7 @@ class CategoriesController extends AppController
 	 *
 	 * @return void
 	 */
-	public function admin_metatags(int $id): void
-	{
+	public function admin_metatags(int $id): void {
 		$this->request->data = $this->Metatag->getData([
 			'lang' => $this->lang,
 			'controller' => $this->request->controller,
@@ -159,8 +153,7 @@ class CategoriesController extends AppController
 	 * @return void
 	 * @throws Exception
 	 */
-	public function admin_active(int $id, bool $enabled = null): void
-	{
+	public function admin_active(int $id, bool $enabled = null): void {
 		$success = $this->Category->active($id, $enabled);
 		$this->actionResponse($success);
 	}
@@ -171,8 +164,7 @@ class CategoriesController extends AppController
 	 * @return void
 	 * @throws Exception
 	 */
-	public function admin_moveup(int $id): void
-	{
+	public function admin_moveup(int $id): void {
 		$success = $this->Category->moveup($id, ['parent_id']);
 		$this->actionResponse($success);
 	}
@@ -183,8 +175,7 @@ class CategoriesController extends AppController
 	 * @return void
 	 * @throws Exception
 	 */
-	public function admin_movedown(int $id): void
-	{
+	public function admin_movedown(int $id): void {
 		$success = $this->Category->movedown($id, ['parent_id']);
 		$this->actionResponse($success);
 	}
@@ -195,8 +186,7 @@ class CategoriesController extends AppController
 	 * @return void
 	 * @throws Exception
 	 */
-	public function admin_delete(int $id): void
-	{
+	public function admin_delete(int $id): void {
 		$this->Category->deleteThreaded($id);
 		$this->actionResponse(true, ['action' => 'index']);
 	}

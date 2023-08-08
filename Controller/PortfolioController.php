@@ -15,8 +15,7 @@ class PortfolioController extends AppController
 	/**
 	 * @return void
 	 */
-	public function index(): void
-	{
+	public function index(): void {
 
 		$data = $this->Portfolio->findAll($this, 5);
 
@@ -28,8 +27,7 @@ class PortfolioController extends AppController
 	 *
 	 * @return void
 	 */
-	public function view(string $strid): void
-	{
+	public function view(string $strid): void {
 		// $this->tempRedirect($this->lang);
 		if (empty($strid)) {
 			$this->redirect(['controller' => 'portfolio', 'action' => 'index'], 301);
@@ -62,8 +60,7 @@ class PortfolioController extends AppController
 	/**
 	 * @return void
 	 */
-	public function admin_index(): void
-	{
+	public function admin_index(): void {
 		$search = $this->manageSearchRequest();
 
 		$data = $this->Portfolio->adminList($this, 20, $search);
@@ -74,8 +71,7 @@ class PortfolioController extends AppController
 	/**
 	 * @return void
 	 */
-	public function admin_create(): void
-	{
+	public function admin_create(): void {
 		if ($this->request->is('post')) {
 			if ($this->Portfolio->save($this->request->data)) {
 				$this->Flash->success(__d('admin', 'MSG_OK'));
@@ -96,8 +92,7 @@ class PortfolioController extends AppController
 	 *
 	 * @return void
 	 */
-	public function admin_update(int $id): void
-	{
+	public function admin_update(int $id): void {
 		if ($this->request->is(['post', 'put'])) {
 			if ($this->Portfolio->save($this->request->data)) {
 				$this->Flash->success(__d('admin', 'MSG_OK'));
@@ -120,8 +115,7 @@ class PortfolioController extends AppController
 	 *
 	 * @return void
 	 */
-	public function admin_metatags(int $id): void
-	{
+	public function admin_metatags(int $id): void {
 		$this->request->data = $this->Metatag->getData([
 			'lang' => $this->lang,
 			'controller' => $this->request->controller,
@@ -139,8 +133,7 @@ class PortfolioController extends AppController
 	 * @return void
 	 * @throws Exception
 	 */
-	public function admin_active(int $id, bool $enabled): void
-	{
+	public function admin_active(int $id, bool $enabled): void {
 		$success = $this->Portfolio->active($id, $enabled);
 		$this->actionResponse($success);
 	}
@@ -151,8 +144,7 @@ class PortfolioController extends AppController
 	 * @return void
 	 * @throws Exception
 	 */
-	public function admin_moveup(int $id): void
-	{
+	public function admin_moveup(int $id): void {
 		$success = $this->Portfolio->moveup($id);
 		$this->actionResponse($success);
 	}
@@ -163,8 +155,7 @@ class PortfolioController extends AppController
 	 * @return void
 	 * @throws Exception
 	 */
-	public function admin_movedown(int $id): void
-	{
+	public function admin_movedown(int $id): void {
 		$success = $this->Portfolio->movedown($id);
 		$this->actionResponse($success);
 	}
@@ -175,8 +166,7 @@ class PortfolioController extends AppController
 	 * @return void
 	 * @throws Exception
 	 */
-	public function admin_delete(int $id): void
-	{
+	public function admin_delete(int $id): void {
 		$this->Portfolio->delete($id);
 		$this->actionResponse(true, ['action' => 'index']);
 	}

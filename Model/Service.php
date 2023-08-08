@@ -47,8 +47,7 @@ class Service extends AppModel
 		'filename_mobile' => ['w' => 490, 'h' => 100],
 	];
 
-	public static function getAdminTabs(int $id): array
-	{
+	public static function getAdminTabs(int $id): array {
 		return [
 			[
 				'title' => __d('admin', 'Edit'),
@@ -80,8 +79,7 @@ class Service extends AppModel
 	 *
 	 * @return bool
 	 */
-	public function beforeValidate($options = []): bool
-	{
+	public function beforeValidate($options = []): bool {
 		if (!isset($this->validate)) {
 			return true;
 		}
@@ -89,7 +87,7 @@ class Service extends AppModel
 		$this->validate = [];
 
 		foreach (Configure::read('Languages.all') as $k => $v) {
-			$this->validate['title_' . $k] = [
+			$this->validate['title_'.$k] = [
 				'rule' => ['minLength', '1'],
 				'message' => __d('admin', 'This field can not be empty')
 			];
@@ -103,10 +101,9 @@ class Service extends AppModel
 	 *
 	 * @return array|int|null
 	 */
-	public function findAllActive()
-	{
+	public function findAllActive() {
 		return $this->find('all', [
-			'conditions' => ['enabled' => 1, 'JSON_CONTAINS(`translated`, \'"' . $this->lang . '"\', "$")'],
+			'conditions' => ['enabled' => 1, 'JSON_CONTAINS(`translated`, \'"'.$this->lang.'"\', "$")'],
 			'order' => ['weight' => 'asc']
 		]);
 	}
@@ -116,8 +113,7 @@ class Service extends AppModel
 	 *
 	 * @return array|int|null
 	 */
-	public function getFirst()
-	{
+	public function getFirst() {
 		return $this->find('first', [
 			'conditions' => ['enabled' => 1],
 			'order' => ['weight' => 'asc']
@@ -132,13 +128,12 @@ class Service extends AppModel
 	 *
 	 * @return array|int|null
 	 */
-	public function findByStrid(string $strid, string $lang)
-	{
-		$conditions = ['Service.strid_' . $lang => $strid];
+	public function findByStrid(string $strid, string $lang) {
+		$conditions = ['Service.strid_'.$lang => $strid];
 
 		if (!CakeSession::check('Admin')) {
 			$conditions['Service.enabled'] = 1;
-			$conditions[] = 'JSON_CONTAINS(`Service`.`translated`, \'"' . $lang . '"\', "$")';
+			$conditions[] = 'JSON_CONTAINS(`Service`.`translated`, \'"'.$lang.'"\', "$")';
 		}
 
 		return $this->find('first', [
@@ -153,8 +148,7 @@ class Service extends AppModel
 	 *
 	 * @return mixed
 	 */
-	public function adminList(object $Controller, int $limit = 20, $search = null)
-	{
+	public function adminList(object $Controller, int $limit = 20, $search = null) {
 		$conditions = [];
 
 		$conditions = array_merge($conditions, $this->searchConditions($search));
@@ -178,8 +172,7 @@ class Service extends AppModel
 	 *
 	 * @return array
 	 */
-	public function getFullBreadcrumbs(int $id, string $lang): array
-	{
+	public function getFullBreadcrumbs(int $id, string $lang): array {
 		$data = $this->find('first', [
 			'conditions' => ['id' => $id, 'enabled' => 1]
 		]);
@@ -192,8 +185,8 @@ class Service extends AppModel
 			'title' => __('Pakalpojumi'),
 			'url' => ['controller' => 'services', 'action' => 'index']
 		], [
-			'title' => $data['Service']['title_' . $lang],
-			'url' => ['controller' => 'services', 'action' => 'view', $data['Service']['strid_' . $lang]]
+			'title' => $data['Service']['title_'.$lang],
+			'url' => ['controller' => 'services', 'action' => 'view', $data['Service']['strid_'.$lang]]
 		]];
 	}
 
@@ -203,10 +196,9 @@ class Service extends AppModel
 	 *
 	 * @return array|int|null
 	 */
-	public function getTrackingData(string $strid, string $lang = null)
-	{
+	public function getTrackingData(string $strid, string $lang = null) {
 		$conditions = [];
-		$conditions['Service.strid_' . $lang] = $strid;
+		$conditions['Service.strid_'.$lang] = $strid;
 
 		return $this->find('first', [
 			'fields' => ['id'],

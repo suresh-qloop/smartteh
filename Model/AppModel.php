@@ -20,8 +20,7 @@ class AppModel extends Model
 	 *
 	 * @return bool
 	 */
-	public function beforeSave($options = []): bool
-	{
+	public function beforeSave($options = []): bool {
 		// create
 		if (!$this->id) {
 			if (empty($this->data[$this->name]['weight']) && $this->hasField('weight')) {
@@ -39,8 +38,9 @@ class AppModel extends Model
 
 		if (isset($this->data[$this->name])) {
 			foreach ($this->data[$this->name] as $k => $url) {
+
 				if (!empty($url) && ($k === 'website' || $k === 'url' || str_starts_with($k, 'url_') || substr($k, -4, 4) === '_url') && !str_starts_with($url, 'http') && !str_starts_with($url, '#') && !str_starts_with($url, '/')) {
-					$this->data[$this->name][$k] = 'http://' . $url;
+					$this->data[$this->name][$k] = 'http://'.$url;
 				}
 			}
 		}
@@ -48,6 +48,7 @@ class AppModel extends Model
 		if (isset($this->data[$this->name]['translated'])) {
 			$this->data[$this->name]['translated'] = json_encode($this->data[$this->name]['translated']);
 		}
+
 		return true;
 	}
 
@@ -57,8 +58,7 @@ class AppModel extends Model
 	 *
 	 * @return mixed
 	 */
-	public function afterFind($results, $primary = false)
-	{
+	public function afterFind($results, $primary = false) {
 		if (isset($results[$this->name]['translated'])) {
 			$results[$this->name]['translated'] = json_decode($results[$this->name]['translated'], true);
 		} else {
@@ -83,8 +83,7 @@ class AppModel extends Model
 	 *
 	 * @return false|string String on success, false if could not obtain unique string in 1000 steps
 	 */
-	public function uniqueEntry(string $fieldName = null, int $length = 6, string $prefix = null, string $postfix = null, string $charset = null)
-	{
+	public function uniqueEntry(string $fieldName = null, int $length = 6, string $prefix = null, string $postfix = null, string $charset = null) {
 		if (empty($fieldName) || empty($length)) {
 			return false;
 		}
@@ -92,14 +91,14 @@ class AppModel extends Model
 		$counter = 0;
 
 		while (true) {
-			$value = $prefix . Utils::randomString($length, $charset) . $postfix;
+			$value = $prefix.Utils::randomString($length, $charset).$postfix;
 
 			if (!$this->hasAny([$fieldName => $value])) {
 				return $value;
 			}
 
 			if (++$counter > 1000) {
-				$this->log('Could not find free random string in model ' . $this->name, LOG_DEBUG);
+				$this->log('Could not find free random string in model '.$this->name, LOG_DEBUG);
 
 				return false;
 			}
@@ -114,8 +113,7 @@ class AppModel extends Model
 	 *
 	 * @return bool
 	 */
-	public function uniqueField($data, $field = null): bool
-	{
+	public function uniqueField($data, $field = null): bool {
 		if (empty($field) || !is_string($field)) {
 			$field = current(array_keys($data));
 		}
@@ -139,8 +137,7 @@ class AppModel extends Model
 	 * @return bool
 	 * @throws Exception
 	 */
-	public function active(int $id = null, bool $enabled = null, string $fieldName = 'enabled'): bool
-	{
+	public function active(int $id = null, bool $enabled = null, string $fieldName = 'enabled'): bool {
 		if (!$this->exists($id)) {
 			return false;
 		}
@@ -171,8 +168,7 @@ class AppModel extends Model
 	 * @return bool
 	 * @throws Exception
 	 */
-	public function enable(int $id = null, string $fieldName = 'enabled'): bool
-	{
+	public function enable(int $id = null, string $fieldName = 'enabled'): bool {
 		return $this->active($id, 1, $fieldName);
 	}
 
@@ -185,8 +181,7 @@ class AppModel extends Model
 	 * @return bool
 	 * @throws Exception
 	 */
-	public function disable(int $id = null, string $fieldName = 'enabled'): bool
-	{
+	public function disable(int $id = null, string $fieldName = 'enabled'): bool {
 		return $this->active($id, 0, $fieldName);
 	}
 
@@ -198,8 +193,7 @@ class AppModel extends Model
 	 *
 	 * @return string|null
 	 */
-	public function getValue($id = null, string $field_name = null)
-	{
+	public function getValue($id = null, string $field_name = null) {
 		$id = $id ?? $this->id;
 
 		$value = $this->field($field_name, [$this->primaryKey => $id]);
@@ -219,8 +213,7 @@ class AppModel extends Model
 	 *
 	 * @return int|boolean
 	 */
-	public function getIdByValue(string $field, string $value)
-	{
+	public function getIdByValue(string $field, string $value) {
 		$data = $this->find('first', [
 			'conditions' => [$field => $value],
 			'fields' => $this->primaryKey
@@ -242,8 +235,7 @@ class AppModel extends Model
 	 *
 	 * @return bool
 	 */
-	public function incFieldValue(int $id, string $fieldName, int $incAmount = 1): bool
-	{
+	public function incFieldValue(int $id, string $fieldName, int $incAmount = 1): bool {
 		$data = $this->getValue($id, $fieldName);
 
 		if ($data === false) {
@@ -263,8 +255,7 @@ class AppModel extends Model
 	 *
 	 * @return bool
 	 */
-	public function movefirst(int $id = null, array $fields = []): bool
-	{
+	public function movefirst(int $id = null, array $fields = []): bool {
 		$data = $this->find('first', [
 			'conditions' => ['id' => $id]
 		]);
@@ -295,15 +286,14 @@ class AppModel extends Model
 	 *
 	 * @return bool
 	 */
-	public function moveup(int $id, array $fields = [], string $fieldName = 'weight'): bool
-	{
+	public function moveup(int $id, array $fields = [], string $fieldName = 'weight'): bool {
 		$data = $this->find('first', [
 			'conditions' => ['id' => $id]
 		]);
 
 		$weight = $data[$this->name][$fieldName];
 
-		$conditions = [$fieldName . ' <' => $weight];
+		$conditions = [$fieldName.' <' => $weight];
 
 		foreach ($fields as $v) {
 			$conditions[$v] = $data[$this->name][$v];
@@ -334,15 +324,14 @@ class AppModel extends Model
 	 *
 	 * @return bool
 	 */
-	public function movedown(int $id, array $fields = [], string $fieldName = 'weight'): bool
-	{
+	public function movedown(int $id, array $fields = [], string $fieldName = 'weight'): bool {
 		$data = $this->find('first', [
 			'conditions' => ['id' => $id]
 		]);
 
 		$weight = $data[$this->name][$fieldName];
 
-		$conditions = [$fieldName . ' >' => $weight];
+		$conditions = [$fieldName.' >' => $weight];
 
 		foreach ($fields as $v) {
 			$conditions[$v] = $data[$this->name][$v];
@@ -372,8 +361,7 @@ class AppModel extends Model
 	 *
 	 * @return bool
 	 */
-	public function movelast(int $id, array $fields = []): bool
-	{
+	public function movelast(int $id, array $fields = []): bool {
 		$data = $this->find('first', [
 			'conditions' => ['id' => $id]
 		]);
@@ -401,9 +389,8 @@ class AppModel extends Model
 	 *
 	 * @return void
 	 */
-	public function truncate(): void
-	{
-		$this->query('TRUNCATE TABLE `' . $this->tablePrefix . $this->useTable . '`');
+	public function truncate(): void {
+		$this->query('TRUNCATE TABLE `'.$this->tablePrefix.$this->useTable.'`');
 	}
 
 	/**
@@ -417,8 +404,7 @@ class AppModel extends Model
 	 *
 	 * @return void
 	 */
-	public function unbindValidation(string $type, array $fields, bool $require = false): void
-	{
+	public function unbindValidation(string $type, array $fields, bool $require = false): void {
 		if ($type === 'remove') {
 			$this->validate = array_diff_key($this->validate, array_flip($fields));
 		} elseif ($type === 'keep') {
@@ -447,10 +433,9 @@ class AppModel extends Model
 	 *
 	 * @return bool
 	 */
-	public function maxValue(int $id, string $fieldName, float $incAmount = 1): bool
-	{
+	public function maxValue(int $id, string $fieldName, float $incAmount = 1): bool {
 		$data = $this->find('first', [
-			'fields' => 'MAX(' . $fieldName . ') AS val'
+			'fields' => 'MAX('.$fieldName.') AS val'
 		]);
 
 		$this->id = $id;
@@ -466,8 +451,7 @@ class AppModel extends Model
 	 *
 	 * @return bool
 	 */
-	public function validFiletype(array $data, $filetypes): bool
-	{
+	public function validFiletype(array $data, $filetypes): bool {
 		$file = current($data);
 
 		// We only check filetype and if file is not uploaded, return true.
@@ -490,8 +474,7 @@ class AppModel extends Model
 	 *
 	 * @return bool
 	 */
-	public function isUploaded(array $data, $allow_empty = false): bool
-	{
+	public function isUploaded(array $data, $allow_empty = false): bool {
 		$file = current($data);
 		if (!$file) {
 			return false;
@@ -516,8 +499,7 @@ class AppModel extends Model
 	 *
 	 * @return array
 	 */
-	public function findThreadedList(array $conditions = null, string $title = 'title'): array
-	{
+	public function findThreadedList(array $conditions = null, string $title = 'title'): array {
 		$data = $this->find('threaded', [
 			'conditions' => $conditions,
 			'fields' => ['id', 'parent_id', $title],
@@ -541,8 +523,7 @@ class AppModel extends Model
 	 *
 	 * @return void
 	 */
-	public function threadedListHelper(array $data, array &$list, int $level = 0, string $title = 'title'): void
-	{
+	public function threadedListHelper(array $data, array &$list, int $level = 0, string $title = 'title'): void {
 		foreach ($data as $v) {
 			$padding = str_repeat('—', $level * 1);
 
@@ -550,7 +531,7 @@ class AppModel extends Model
 				$padding .= ' ';
 			}
 
-			$list[$v[$this->name]['id']] = $padding . $v[$this->name][$title];
+			$list[$v[$this->name]['id']] = $padding.$v[$this->name][$title];
 
 			if (!empty($v['children'])) {
 				$this->threadedListHelper($v['children'], $list, $level + 1, $title);
@@ -565,8 +546,7 @@ class AppModel extends Model
 	 *
 	 * @return void
 	 */
-	public function deleteThreaded(int $id): void
-	{
+	public function deleteThreaded(int $id): void {
 		$this->delete($id);
 		$this->deleteThreadedHelper($id);
 	}
@@ -583,15 +563,14 @@ class AppModel extends Model
 	 *
 	 * @return void
 	 */
-	public function deleteThreadedHelper($parent_id): void
-	{
+	public function deleteThreadedHelper($parent_id): void {
 		$ids = $this->find('list', [
 			'conditions' => ['parent_id' => $parent_id],
 			'fields' => 'id'
 		]);
 
 		if ($ids) {
-			$this->deleteAll([$this->name . '.id' => $ids]);
+			$this->deleteAll([$this->name.'.id' => $ids]);
 			$this->deleteThreadedHelper($ids);
 		}
 	}
@@ -604,8 +583,7 @@ class AppModel extends Model
 	 *
 	 * @return mixed
 	 */
-	public function getOrFail(int $id = null, $contain = false)
-	{
+	public function getOrFail(int $id = null, $contain = false) {
 		$data = $this->get($id, $contain);
 
 		if (!$data) {
@@ -623,10 +601,9 @@ class AppModel extends Model
 	 *
 	 * @return array|int|null
 	 */
-	public function get(int $id = null, $contain = false)
-	{
+	public function get(int $id = null, $contain = false) {
 		return $this->find('first', [
-			'conditions' => [$this->name . '.id' => ($id ?? $this->id)],
+			'conditions' => [$this->name.'.id' => ($id ?? $this->id)],
 			'contain' => $contain
 		]);
 	}
@@ -639,8 +616,7 @@ class AppModel extends Model
 	 *
 	 * @return array|int|null
 	 */
-	public function getAll($conditions = null, $contain = false)
-	{
+	public function getAll($conditions = null, $contain = false) {
 		return $this->find('all', [
 			'conditions' => $conditions,
 			'contain' => $contain
@@ -656,11 +632,10 @@ class AppModel extends Model
 	 *
 	 * @return int
 	 */
-	public function firstWeight($conditions = false, string $field = 'weight'): int
-	{
+	public function firstWeight($conditions = false, string $field = 'weight'): int {
 		$data = $this->find('first', [
-			'conditions' => am([$field . ' >' => 0], $conditions),
-			'fields' => ['MIN(' . $field . ') AS weight']
+			'conditions' => am([$field.' >' => 0], $conditions),
+			'fields' => ['MIN('.$field.') AS weight']
 		]);
 
 		if (!$data || $data[0]['weight'] === 0) {
@@ -679,11 +654,10 @@ class AppModel extends Model
 	 *
 	 * @return int
 	 */
-	public function lastWeight($conditions = false, string $field = 'weight'): int
-	{
+	public function lastWeight($conditions = false, string $field = 'weight'): int {
 		$data = $this->find('first', [
-			'conditions' => am([$field . ' >' => 0], $conditions),
-			'fields' => ['MAX(' . $field . ') AS weight']
+			'conditions' => am([$field.' >' => 0], $conditions),
+			'fields' => ['MAX('.$field.') AS weight']
 		]);
 
 		if (!$data || $data[0]['weight'] === 0) {
@@ -698,8 +672,7 @@ class AppModel extends Model
 	 *
 	 * @return array
 	 */
-	public function getColumns(): array
-	{
+	public function getColumns(): array {
 		return array_keys($this->getColumnTypes());
 	}
 
@@ -708,11 +681,10 @@ class AppModel extends Model
 	 *
 	 * @return int
 	 */
-	public function getNextAutoIncrement(): int
-	{
-		$table = $this->tablePrefix . $this->useTable;
+	public function getNextAutoIncrement(): int {
+		$table = $this->tablePrefix.$this->useTable;
 
-		$data = $this->query('SHOW TABLE STATUS LIKE \'' . $table . '\'');
+		$data = $this->query('SHOW TABLE STATUS LIKE \''.$table.'\'');
 
 		if ($data) {
 			return $data[0]['TABLES']['Auto_increment'];
@@ -730,8 +702,7 @@ class AppModel extends Model
 	 *
 	 * @return array|int|null
 	 */
-	public function findList($fields = ['id', 'title'], $order = null, array $conditions = null)
-	{
+	public function findList($fields = ['id', 'title'], $order = null, array $conditions = null) {
 		if ($order === null) {
 			if (is_string($fields)) {
 				$order = [$fields => 'asc'];
@@ -756,8 +727,7 @@ class AppModel extends Model
 	 *
 	 * @return bool
 	 */
-	public function isEqual(array $data, string $field1, string $field2): bool
-	{
+	public function isEqual(array $data, string $field1, string $field2): bool {
 		return ($this->data[$this->name][$field1] === $this->data[$this->name][$field2]);
 	}
 
@@ -772,8 +742,7 @@ class AppModel extends Model
 	 *
 	 * @return void
 	 */
-	public function unbindAll(bool $reset = true): void
-	{
+	public function unbindAll(bool $reset = true): void {
 		foreach ([
 			'hasOne' => array_keys($this->hasOne),
 			'hasMany' => array_keys($this->hasMany),
@@ -795,8 +764,7 @@ class AppModel extends Model
 	 *
 	 * @return array
 	 */
-	public function searchConditions($data, array $precise = []): array
-	{
+	public function searchConditions($data, array $precise = []): array {
 		$conditions = [];
 
 		if (!empty($data)) {
@@ -807,14 +775,14 @@ class AppModel extends Model
 							$v = date('Y-m-d', strtotime($v));
 						}
 
-						if (is_array($v) || in_array($model . '.' . $k, $precise, true) || substr($k, -3, 3) === '_id' || in_array($k, ['id', 'date'])) {
-							$conditions[$model . '.' . $k] = $v;
+						if (is_array($v) || in_array($model.'.'.$k, $precise, true) || substr($k, -3, 3) === '_id' || in_array($k, ['id', 'date'])) {
+							$conditions[$model.'.'.$k] = $v;
 						} elseif (in_array($k[strlen($k) - 1], ['=', '<', '>'])) {
-							$conditions[$model . '.' . $k] = $v;
+							$conditions[$model.'.'.$k] = $v;
 						} elseif ($k === 'updated' || $k === 'created' || str_contains($k, 'date')) {
-							$conditions[$model . '.' . $k . ' LIKE'] = $v . '%';
+							$conditions[$model.'.'.$k.' LIKE'] = $v.'%';
 						} else {
-							$conditions[$model . '.' . $k . ' LIKE'] = '%' . $v . '%';
+							$conditions[$model.'.'.$k.' LIKE'] = '%'.$v.'%';
 						}
 					}
 				}
@@ -837,8 +805,7 @@ class AppModel extends Model
 	 *
 	 * @return bool
 	 */
-	public function replaceFile(int $id, string $filename, string $field, $paths): bool
-	{
+	public function replaceFile(int $id, string $filename, string $field, $paths): bool {
 		$old_filename = $this->getValue($id, $field);
 
 		if ($filename === $old_filename) {
@@ -855,7 +822,7 @@ class AppModel extends Model
 					$path .= DIRECTORY_SEPARATOR;
 				}
 
-				Utils::deleteNode($path . $old_filename);
+				Utils::deleteNode($path.$old_filename);
 			}
 		}
 
@@ -869,8 +836,7 @@ class AppModel extends Model
 	 *
 	 * @return array
 	 */
-	public function getQueries(): array
-	{
+	public function getQueries(): array {
 		return $this->getDataSource()->getLog(false, false);
 	}
 
@@ -879,9 +845,8 @@ class AppModel extends Model
 	 *
 	 * @return string
 	 */
-	public function tableName(): string
-	{
-		return $this->tablePrefix . $this->useTable;
+	public function tableName(): string {
+		return $this->tablePrefix.$this->useTable;
 	}
 
 	/**
@@ -891,8 +856,7 @@ class AppModel extends Model
 	 *
 	 * @return bool
 	 */
-	public function isValidYoutubeUrl($data): bool
-	{
+	public function isValidYoutubeUrl($data): bool {
 		$url = trim(current($data));
 
 		if (empty($url)) {
@@ -923,8 +887,7 @@ class AppModel extends Model
 	 * @return mixed
 	 * @throws Exception
 	 */
-	public function update(int $id, array $data)
-	{
+	public function update(int $id, array $data) {
 		$this->id = $id;
 
 		return $this->save($data);
@@ -939,8 +902,7 @@ class AppModel extends Model
 	 *
 	 * @return array
 	 */
-	public function threadedToFlat($data): array
-	{
+	public function threadedToFlat($data): array {
 		$flattened = [];
 
 		$this->threadedToFlatHelper($data, $flattened);
@@ -957,8 +919,7 @@ class AppModel extends Model
 	 *
 	 * @return void
 	 */
-	public function threadedToFlatHelper(array $data, array &$flattened, int $level = 0): void
-	{
+	public function threadedToFlatHelper(array $data, array &$flattened, int $level = 0): void {
 		foreach ($data as $v) {
 			$new_item = $v;
 			$new_item[$this->name]['_level'] = $level;
@@ -980,15 +941,14 @@ class AppModel extends Model
 	 *
 	 * @return bool
 	 */
-	public function bulkSave(array $data, $chunked = 1000): bool
-	{
+	public function bulkSave(array $data, $chunked = 1000): bool {
 		if (empty($data)) {
 			return false;
 		}
 
 		$values = [];
 
-		$table = $this->tablePrefix . $this->useTable;
+		$table = $this->tablePrefix.$this->useTable;
 		$fields = array_keys($data[0]);
 
 		$qstrs = [];
@@ -1000,20 +960,20 @@ class AppModel extends Model
 				if ($value === null) {
 					$quoted_values[] = 'NULL';
 				} else {
-					$quoted_values[] = "'" . $value . "'";
+					$quoted_values[] = "'".$value."'";
 				}
 			}
 
-			$values[] = "(" . implode(',', $quoted_values) . ")";
+			$values[] = "(".implode(',', $quoted_values).")";
 
 			if ($chunked && count($values) >= $chunked) {
-				$qstrs[] = 'INSERT INTO ' . $table . ' (' . implode(', ', $fields) . ') VALUES ' . implode(',', $values);
+				$qstrs[] = 'INSERT INTO '.$table.' ('.implode(', ', $fields).') VALUES '.implode(',', $values);
 				$values = [];
 			}
 		}
 
 		if ($values) {
-			$qstrs[] = 'INSERT INTO ' . $table . ' (' . implode(', ', $fields) . ') VALUES ' . implode(',', $values);
+			$qstrs[] = 'INSERT INTO '.$table.' ('.implode(', ', $fields).') VALUES '.implode(',', $values);
 		}
 
 		foreach ($qstrs as $qstr) {
@@ -1030,10 +990,9 @@ class AppModel extends Model
 	 *
 	 * @return mixed
 	 */
-	public function getMin(string $fieldName)
-	{
+	public function getMin(string $fieldName) {
 		$data = $this->find('first', [
-			'fields' => 'MIN(' . $fieldName . ') AS val'
+			'fields' => 'MIN('.$fieldName.') AS val'
 		]);
 
 		if (!$data) {
@@ -1050,10 +1009,9 @@ class AppModel extends Model
 	 *
 	 * @return mixed
 	 */
-	public function getMax(string $fieldName)
-	{
+	public function getMax(string $fieldName) {
 		$data = $this->find('first', [
-			'fields' => 'MAX(' . $fieldName . ') AS val'
+			'fields' => 'MAX('.$fieldName.') AS val'
 		]);
 
 		if (!$data) {
@@ -1066,14 +1024,13 @@ class AppModel extends Model
 	/**
 	 * @return void
 	 */
-	public function fillTitlesAndSlugsOnCreate(): void
-	{
-		$title = $this->data[$this->name]['title_' . $this->lang];
-		$strid = $this->data[$this->name]['strid_' . $this->lang];
+	public function fillTitlesAndSlugsOnCreate(): void {
+		$title = $this->data[$this->name]['title_'.$this->lang];
+		$strid = $this->data[$this->name]['strid_'.$this->lang];
 		foreach (array_keys(Configure::read('Languages.all')) as $lang) {
-			if (empty($this->data[$this->name]['title_' . $lang])) {
-				$this->data[$this->name]['title_' . $lang] = $title;
-				$this->data[$this->name]['strid_' . $lang] = $strid;
+			if (empty($this->data[$this->name]['title_'.$lang])) {
+				$this->data[$this->name]['title_'.$lang] = $title;
+				$this->data[$this->name]['strid_'.$lang] = $strid;
 			}
 		}
 	}

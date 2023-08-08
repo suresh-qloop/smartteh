@@ -11,8 +11,7 @@ class Section extends AppModel
 		]
 	];
 
-	public static function getAdminTabs(int $id): array
-	{
+	public static function getAdminTabs(int $id): array {
 		return [
 			[
 				'title' => __d('admin', 'Edit'),
@@ -44,8 +43,7 @@ class Section extends AppModel
 	 *
 	 * @return bool
 	 */
-	public function beforeValidate($options = []): bool
-	{
+	public function beforeValidate($options = []): bool {
 		if (!isset($this->validate)) {
 			return true;
 		}
@@ -67,9 +65,7 @@ class Section extends AppModel
 	 *
 	 * @return bool
 	 */
-	public function beforeSave($options = []): bool
-	{
-
+	public function beforeSave($options = []): bool {
 		if (empty($this->id)) {
 			$this->fillTitlesAndSlugsOnCreate();
 		}
@@ -83,10 +79,9 @@ class Section extends AppModel
 	 *
 	 * @return array|int|null
 	 */
-	public function findByStrid(string $strid, string $lang)
-	{
+	public function findByStrid(string $strid, string $lang) {
 		return $this->find('first', [
-			'conditions' => ['strid_' . $lang => $strid, 'JSON_CONTAINS(`translated`, \'"' . $lang . '"\', "$")']
+			'conditions' => ['strid_'.$lang => $strid, 'JSON_CONTAINS(`translated`, \'"'.$lang.'"\', "$")']
 		]);
 	}
 
@@ -96,8 +91,7 @@ class Section extends AppModel
 	 *
 	 * @return mixed
 	 */
-	public function adminList(object $Controller, int $limit = 20)
-	{
+	public function adminList(object $Controller, int $limit = 20) {
 		$Controller->paginate = [
 			'conditions' => [],
 			'order' => ['title' => 'asc'],
@@ -115,8 +109,7 @@ class Section extends AppModel
 	 *
 	 * @return array|int|null
 	 */
-	public function getFull($strid, string $lang = null)
-	{
+	public function getFull($strid, string $lang = null) {
 		$conditions = [];
 
 		if (!$lang) {
@@ -126,7 +119,7 @@ class Section extends AppModel
 		if (is_numeric($strid)) {
 			$conditions['Section.id'] = $strid;
 		} else {
-			$conditions['Section.strid_' . $lang] = $strid;
+			$conditions['Section.strid_'.$lang] = $strid;
 		}
 
 		return $this->find('first', [
@@ -140,10 +133,9 @@ class Section extends AppModel
 	 *
 	 * @return array|int|null
 	 */
-	public function getTrackingData(string $strid, string $lang = null)
-	{
+	public function getTrackingData(string $strid, string $lang = null) {
 		$conditions = [];
-		$conditions['Section.strid_' . $lang] = $strid;
+		$conditions['Section.strid_'.$lang] = $strid;
 
 		return $this->find('first', [
 			'fields' => ['id'],

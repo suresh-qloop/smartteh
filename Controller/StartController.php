@@ -14,8 +14,7 @@ class StartController extends AppController
 	/**
 	 * @return void
 	 */
-	public function index(): void
-	{
+	public function index(): void {
 		$slides = $this->Slide->findActive($this->lang);
 		$industries = $this->Industry->findAllActive();
 		$partners = $this->Partner->findAllActive();

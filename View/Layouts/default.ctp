@@ -5,7 +5,7 @@ $title_suffix = !empty($is_frontpage) ? '' : ' | SmartTEH';
 
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="<?= $lang ?>">
 
 <head>
 	<meta charset="UTF-8" />

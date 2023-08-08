@@ -19,8 +19,7 @@ class ProductsController extends AppController
 	 *
 	 * @return void
 	 */
-	public function view(string $strid): void
-	{
+	public function view(string $strid): void {
 		// $this->tempRedirect($this->lang);
 		if (empty($strid)) {
 			$this->redirect(['controller' => 'industries', 'action' => 'index'], 301);
@@ -86,21 +85,22 @@ class ProductsController extends AppController
 	 * @return void
 	 * @throws Exception
 	 */
-	public function pdf(string $strid): void
-	{
-		$this->redirect(['controller' => 'start', 'action' => 'index', 'lang' => $this->lang]);
+	public function pdf(string $strid): void {
+		
 		$download = true;
 
 		$data = $this->Product->getFull($strid);
 
 		if (!$data) {
-			throw new NotFoundException();
+			$this->redirect($this->referer());
+			// throw new NotFoundException();
 		}
 
 		$html_file = $this->preparePdfFile($data);
 
 		if (!$html_file) {
-			throw new RuntimeException('Could not generate/save html file', 1);
+			$this->redirect($this->referer());
+			// throw new RuntimeException('Could not generate/save html file', 1);
 		}
 
 		$this->autoRender = false;
@@ -153,8 +153,7 @@ class ProductsController extends AppController
 	 *
 	 * @return false|string
 	 */
-	private function preparePdfFile(array &$data)
-	{
+	private function preparePdfFile(array &$data) {
 		$this->autoRender = false;
 
 		$data['Product'] = $this->Product->relativePathsToAbsolute(
@@ -182,8 +181,7 @@ class ProductsController extends AppController
 	 *
 	 * @return void
 	 */
-	public function share_via_email(): void
-	{
+	public function share_via_email(): void {
 		if (!$this->request->is('post')) {
 			throw new BadRequestException();
 		}
@@ -239,8 +237,7 @@ class ProductsController extends AppController
 	/**
 	 * @return void
 	 */
-	public function admin_index(): void
-	{
+	public function admin_index(): void {
 		$search = $this->manageSearchRequest();
 
 		$data = $this->Product->adminList($this, 15, $search);
@@ -251,8 +248,7 @@ class ProductsController extends AppController
 	/**
 	 * @return void
 	 */
-	public function admin_create(): void
-	{
+	public function admin_create(): void {
 		if ($this->request->is('post')) {
 			$this->request->data['Product']['lang'] = $this->lang;
 
@@ -274,8 +270,7 @@ class ProductsController extends AppController
 	 *
 	 * @return void
 	 */
-	public function admin_update(int $id): void
-	{
+	public function admin_update(int $id): void {
 		if ($this->request->is(['post', 'put'])) {
 			if ($this->Product->save($this->request->data)) {
 				$this->Flash->success(__d('admin', 'MSG_OK'));
@@ -301,8 +296,7 @@ class ProductsController extends AppController
 	 *
 	 * @return void
 	 */
-	public function admin_duplicate(int $id): void
-	{
+	public function admin_duplicate(int $id): void {
 		$new_id = $this->Product->duplicate($id);
 
 		if ($new_id) {
@@ -322,8 +316,7 @@ class ProductsController extends AppController
 	 *
 	 * @return void
 	 */
-	public function admin_metatags(int $id): void
-	{
+	public function admin_metatags(int $id): void {
 		$this->request->data = $this->Metatag->getData([
 			'lang' => $this->lang,
 			'controller' => $this->request->controller,
@@ -341,8 +334,7 @@ class ProductsController extends AppController
 	 * @return void
 	 * @throws Exception
 	 */
-	public function admin_active(int $id, bool $enabled = null): void
-	{
+	public function admin_active(int $id, bool $enabled = null): void {
 		$success = $this->Product->active($id, $enabled);
 		$this->actionResponse($success);
 	}
@@ -353,8 +345,7 @@ class ProductsController extends AppController
 	 * @return void
 	 * @throws Exception
 	 */
-	public function admin_delete(int $id): void
-	{
+	public function admin_delete(int $id): void {
 		$this->Product->delete($id);
 		$this->actionResponse(true, ['action' => 'index']);
 	}
