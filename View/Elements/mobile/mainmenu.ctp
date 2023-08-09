@@ -25,7 +25,7 @@ if ($menu_services) {
 ?>
 <div class="mainmenu" id="mainmenu">
 
-	<button type="button" class="menu-btn js-menu-btn"></button>
+	<button type="button" class="menu-btn js-menu-btn" aria-label="menu button"></button>
 
 	<?= $this->element('languages') ?>
 
