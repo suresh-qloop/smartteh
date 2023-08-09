@@ -57,9 +57,9 @@ class SitemapController extends AppController
 			]
 		];
 
-		$xml = Xml::fromArray($sitemap);
+		// $xml = Xml::fromArray($sitemap);
 
-		$this->set(compact('xml'));
+		$this->set(compact('sitemap'));
 	}
 
 	/**
