@@ -30,7 +30,7 @@ $title_suffix = !empty($is_frontpage) ? '' : ' | SmartTEH';
 
 	<link rel="icon" href="/favicon.gif?v=2" />
 
-	<link rel="alternate" hreflang="lv" href="<?= Router::url('/lv', true); ?>" />
+	<link rel="alternate" hreflang="lv" href="<?= Router::url('/', true); ?>" />
 	<link rel="alternate" hreflang="x-default" href="<?= Router::url('/en', true); ?>" />
 	<link rel="alternate" hreflang="en" href="<?= Router::url('/en', true); ?>" />
 	<link rel="alternate" hreflang="ru" href="<?= Router::url('/ru', true); ?>" />
