@@ -52,7 +52,9 @@ class PortfolioController extends AppController
 			// throw new NotFoundException();
 		}
 
-		$this->set(compact('data'));
+		$urls = $this->commanUrlGet($this->lang,$strid,'Portfolio','portfolio');
+
+		$this->set(compact('data','urls'));
 	}
 
 	// ~~~ Administration ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

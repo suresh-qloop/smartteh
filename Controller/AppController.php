@@ -16,6 +16,8 @@ class AppController extends Controller
 
 	public $mobile = false;
 
+	private $langs = [];
+
 	/**
 	 * Function is executed before any controller logic
 	 *
@@ -43,8 +45,7 @@ class AppController extends Controller
 		}
 	}
 
-	// public function tempRedirect($language)
-	// {
+	// public function tempRedirect($language) {
 	// 	$supportedLanguages = array("en", "lv");
 
 	// 	if (!in_array($language, $supportedLanguages)) {
@@ -52,6 +53,71 @@ class AppController extends Controller
 	// 		$this->redirect($redirect);
 	// 	}
 	// }
+
+	public function commanIndexUrlGet($controller) {
+		
+		$this->langs = array_keys(Configure::read('Languages.all'));
+		$urls = [];
+
+		foreach ($this->langs as $lang) {
+			$url = [
+				'lang' =>$lang,
+				'loc' => rtrim(Router::url(['lang' => $lang, 'controller' => $controller, 'action' => 'index'], true), '/'),
+			];
+
+			if ($this->output_related_langs) {
+				$url['xhtml:link'] = [];
+				foreach ($this->relatedLangs($lang) as $related_lang) {
+					$url['xhtml:link'][] = [
+						'@href' => Router::url(['lang' => $related_lang, 'controller' => $controller, 'action' => 'index'], true)
+					];
+				}
+			}
+			$urls[] = $url;
+		}
+		return $urls;
+	}
+
+	public function commanUrlGet($language,$slug,$model,$controller) {
+
+		$urls = [];
+		$this->langs = array_keys(Configure::read('Languages.all'));
+		
+		$fields = array_map(static function ($lang) {
+			return 'strid_' . $lang;
+		}, $this->langs);
+		$fields[] = 'translated';
+
+		$data = $this->$model->find('all', [
+			'conditions' => ['enabled' => 1,'strid_'. $language => $slug],
+			'fields' => $fields
+		]);
+
+		foreach ($data as $v) {
+			$langs = array_intersect($this->langs, $v[$model]['translated']);
+
+			foreach ($langs as $lang) {
+				$url = [
+					'lang' =>$lang,
+					'loc' => Router::url(['lang' => $lang, 'controller' => $controller, 'action' => 'view', $v[$model]['strid_' . $lang]], true)
+				];
+
+				if ($this->output_related_langs) {
+					$related_langs = array_intersect($this->relatedLangs($lang), $v[$model]['translated']);
+					if ($related_langs) {
+						foreach ($related_langs as $related_lang) {
+							$url[] = [
+								'@href' => Router::url(['lang' => $related_lang, 'controller' => $controller, 'action' => 'view', $v[$model]['strid_' . $related_lang]], true)
+							];
+						}
+					}
+				}
+
+				$urls[] = $url;
+			}
+		}
+		return $urls;
+	}
 
 	/**
 	 * Function is executed before any page rendering

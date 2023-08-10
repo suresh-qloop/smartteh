@@ -16,7 +16,9 @@ class ThemesController extends AppController
 	public function index(): void {
 		$data = $this->Theme->findAll($this, 5);
 
-		$this->set(compact('data'));
+		$urls = $this->commanIndexUrlGet('themes');
+
+		$this->set(compact('data','urls'));
 	}
 
 	/**
@@ -46,8 +48,8 @@ class ThemesController extends AppController
 
 			throw new NotFoundException();
 		}
-
-		$this->set(compact('data', 'articles'));
+		$urls = $this->commanUrlGet($this->lang,$strid,'Theme','themes');
+		$this->set(compact('data', 'articles','urls'));
 		$this->render('view');
 	}
 

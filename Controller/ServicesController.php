@@ -64,13 +64,14 @@ class ServicesController extends AppController
 		$heading = $this->Service->getValue($bc[0], 'title_' . $this->lang);
 
 		$robots_noindex = !in_array($this->lang, $data['Service']['translated'], true);
-
+		$urls = $this->commanUrlGet($this->lang,$strid,'Service','services');
 		$this->set(compact(
 			'data',
 			'breadcrumbs',
 			'bc',
 			'heading',
-			'robots_noindex'
+			'robots_noindex',
+			'urls'
 		));
 
 		$this->render('view');

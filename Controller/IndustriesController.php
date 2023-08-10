@@ -53,7 +53,7 @@ class IndustriesController extends AppController
 		}
 
 		$page_header_image = $this->Industry->getHeaderImage($data);
-
+		
 		$bc = [$data['Industry']['id']];
 
 		$heading = $this->Industry->getValue($bc[0], 'title_' . $this->lang);
@@ -68,6 +68,8 @@ class IndustriesController extends AppController
 
 		$breadcrumbs = $this->Industry->getFullBreadcrumbs($data['Industry']['id'], $this->lang);
 
+		$urls = $this->commanUrlGet($this->lang,$strid,'Industry','industries');
+
 		$this->set(compact(
 			'data',
 			'bc',
@@ -77,7 +79,8 @@ class IndustriesController extends AppController
 			'articles',
 			'page_header_image',
 			'robots_noindex',
-			'breadcrumbs'
+			'breadcrumbs',
+			'urls',
 		));
 
 		$this->render('view');

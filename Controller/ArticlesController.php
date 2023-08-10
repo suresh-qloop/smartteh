@@ -39,7 +39,10 @@ class ArticlesController extends AppController
 
 		$data = $this->Article->findAll($this, 5, $conditions);
 		$theme_list = $this->Theme->findAllActive();
-		$this->set(compact('data', 'theme_list', 'active'));
+
+		$urls = $this->commanIndexUrlGet('articles');
+		
+		$this->set(compact('data', 'theme_list', 'active','urls'));
 	}
 
 	/**
@@ -73,7 +76,10 @@ class ArticlesController extends AppController
 		}
 
 		$breadcrumbs = $this->Article->getFullBreadcrumbs($data['Article']['id'], $this->lang);
-		$this->set(compact('data', 'breadcrumbs'));
+
+		$urls = $this->commanUrlGet($this->lang,$strid,'Article','articles');
+
+		$this->set(compact('data', 'breadcrumbs','urls'));
 	}
 
 	// ~~~ Administration ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

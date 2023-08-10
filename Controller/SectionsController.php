@@ -41,8 +41,8 @@ class SectionsController extends AppController
 		if (!$data) {
 			throw new NotFoundException();
 		}
-
-		$this->set(compact('data'));
+		$urls = $this->commanUrlGet($this->lang,$strid,'Section','sections');
+		$this->set(compact('data','urls'));
 	}
 
 	// ~~~ Administration ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

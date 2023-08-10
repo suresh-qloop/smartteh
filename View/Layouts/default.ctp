@@ -30,20 +30,24 @@ $title_suffix = !empty($is_frontpage) ? '' : ' | SmartTEH';
 
 	<link rel="icon" href="/favicon.gif?v=2" />
 
-	<link rel="alternate" hreflang="lv" href="<?= Router::url('/', true); ?>" />
-	<link rel="alternate" hreflang="x-default" href="<?= Router::url('/en', true); ?>" />
-	<link rel="alternate" hreflang="en" href="<?= Router::url('/en', true); ?>" />
-	<link rel="alternate" hreflang="ru" href="<?= Router::url('/ru', true); ?>" />
-	<link rel="alternate" hreflang="es" href="<?= Router::url('/es', true); ?>" />
-	<link rel="alternate" hreflang="de" href="<?= Router::url('/de', true); ?>" />
+			<link rel="alternate" hreflang="x-default" href="<?= Router::url(null, true); ?>" />
+	<?php $a1 = array(); foreach($urls as $url){ 
+		  $a1[] = $url['lang']; ?>
+		<link rel="alternate" hreflang="<?= $url['lang'] ?>" href="<?= $url['loc'] ?>" />
+	<?php } ?>
+	<?php $a2 = ['lv','ru','en','es','de'];
+		$result=array_diff($a2,$a1);
+		foreach($result as $val){ ?>
+		<link rel="alternate" hreflang="<?= $val ?>" href="<?= ($val == 'lv') ? Router::url('/', true) : Router::url('/'.$val, true); ?>" />
+	<?php } ?>
 
 	<?php if ($this->Html->isTestSite()) : ?>
-		<meta name="robots" content="noindex, follow" />
+		<!-- <meta name="robots" content="noindex, follow" /> -->
 	<?php elseif (!empty($canonical)) : ?>
-		<link rel="canonical" href="<?= $this->Html->url($canonical, true) ?>" />
-		<meta name="robots" content="noindex, follow" />
+		<!-- <link rel="canonical" href="<?= $this->Html->url($canonical, true) ?>" /> -->
+		<!-- <meta name="robots" content="noindex, follow" /> -->
 	<?php elseif (!empty($robots_noindex)) : ?>
-		<meta name="robots" content="noindex, follow" />
+		<!-- <meta name="robots" content="noindex, follow" /> -->
 	<?php endif ?>
 
 	<?= $this->element('social-meta-tags') ?>

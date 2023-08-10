@@ -63,6 +63,8 @@ class CategoriesController extends AppController
 
 		$breadcrumbs = $this->Category->getFullBreadcrumbs($data['Category']['id'], $this->lang);
 
+		$urls = $this->commanUrlGet($this->lang,$strid,'Category','categories');
+
 		$this->set(compact(
 			'data',
 			'bc',
@@ -71,7 +73,8 @@ class CategoriesController extends AppController
 			'products',
 			'page_header_image',
 			'robots_noindex',
-			'breadcrumbs'
+			'breadcrumbs',
+			'urls'
 		));
 
 		$this->render('view');

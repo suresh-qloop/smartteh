@@ -48,6 +48,7 @@ class ProductsController extends AppController
 
 		$canonical = $from ? ['controller' => 'products', 'action' => 'view', $strid] : null;
 		$robots_noindex = !in_array($this->lang, $data['Product']['translated'], true);
+		$urls = $this->commanUrlGet($this->lang,$strid,'Product','products');
 
 		if (!in_array($from, ['category', 'industry'])) {
 			$from = 'category';
@@ -73,7 +74,8 @@ class ProductsController extends AppController
 			'page_header_image',
 			'canonical',
 			'robots_noindex',
-			'breadcrumbs'
+			'breadcrumbs',
+			'urls'
 		));
 	}
 
