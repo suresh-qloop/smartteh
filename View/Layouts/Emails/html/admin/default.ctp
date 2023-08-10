@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
-<html lang="<?= $lang ?>">
+<html>
 <head>
 	<title><?= isset($title_for_layout) ? $title_for_layout : '' ?></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />

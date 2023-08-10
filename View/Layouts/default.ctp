@@ -30,14 +30,18 @@ $title_suffix = !empty($is_frontpage) ? '' : ' | SmartTEH';
 
 	<link rel="icon" href="/favicon.gif?v=2" />
 
-			<link rel="alternate" hreflang="x-default" href="<?= Router::url(null, true); ?>" />
+	
 	<?php $lang1 = array(); foreach($urls as $url){ 
-		  $lang1[] = $url['lang']; ?>
+		  $lang1[] = $url['lang']; if($url['lang'] == 'en'){ ?>
+		<link rel="alternate" hreflang="x-default" href="<?= $url['loc'] ?>" />
+		  <?php } ?>
 		<link rel="alternate" hreflang="<?= $url['lang'] ?>" href="<?= $url['loc'] ?>" />
 	<?php } ?>
 	<?php $lang2 = ['lv','ru','en','es','de'];
 		$result=array_diff($lang2,$lang1);
-		foreach($result as $val){ ?>
+		foreach($result as $val){ if($val == 'en'){ ?>
+			<link rel="alternate" hreflang="x-default" href="<?= Router::url('/'.$val, true); ?>" />
+		<?php }?>
 		<link rel="alternate" hreflang="<?= $val ?>" href="<?= ($val == 'lv') ? Router::url('/', true) : Router::url('/'.$val, true); ?>" />
 	<?php } ?>
 
