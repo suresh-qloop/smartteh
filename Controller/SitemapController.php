@@ -72,7 +72,9 @@ class SitemapController extends AppController
 		foreach ($this->langs as $lang) {
 			$url = [
 				'loc' => rtrim(Router::url(['lang' => $lang, 'controller' => $controller, 'action' => 'index'], true), '/'),
-				'changefreq' => 'daily'
+				'changefreq' => 'daily',
+				'lastmod'=> date('c', time()),
+				'priority'=>'0.1',
 			];
 
 			if ($this->output_related_langs) {
@@ -113,7 +115,9 @@ class SitemapController extends AppController
 			foreach ($langs as $lang) {
 				$urls[] = [
 					'loc' => Router::url(['lang' => $lang, 'controller' => 'sections', 'action' => 'view', $v['Section']['strid_' . $lang]], true),
-					'changefreq' => 'daily'
+					'changefreq' => 'daily',
+					'lastmod'=> date('c', time()),
+					'priority'=>'0.9',
 				];
 			}
 		}
@@ -143,7 +147,9 @@ class SitemapController extends AppController
 			foreach ($langs as $lang) {
 				$url = [
 					'loc' => Router::url(['lang' => $lang, 'controller' => 'categories', 'action' => 'view', $v['Category']['strid_' . $lang]], true),
-					'changefreq' => 'daily'
+					'changefreq' => 'daily',
+					'lastmod'=> date('c', time()),
+					'priority'=>'0.9',
 				];
 
 				if ($this->output_related_langs) {
@@ -200,7 +206,9 @@ class SitemapController extends AppController
 			foreach ($langs as $lang) {
 				$url = [
 					'loc' => Router::url(['lang' => $lang, 'controller' => 'industries', 'action' => 'view', $v['Industry']['strid_' . $lang]], true),
-					'changefreq' => 'daily'
+					'changefreq' => 'daily',
+					'lastmod'=> date('c', time()),
+					'priority'=>'0.9',
 				];
 
 				if ($this->output_related_langs) {
@@ -246,7 +254,9 @@ class SitemapController extends AppController
 			foreach ($langs as $lang) {
 				$url = [
 					'loc' => Router::url(['lang' => $lang, 'controller' => 'products', 'action' => 'view', $v['Product']['strid_' . $lang]], true),
-					'changefreq' => 'daily'
+					'changefreq' => 'daily',
+					'lastmod'=> date('c', time()),
+					'priority'=>'0.9',
 				];
 
 				if ($this->output_related_langs) {
@@ -290,7 +300,9 @@ class SitemapController extends AppController
 			foreach ($langs as $lang) {
 				$url = [
 					'loc' => Router::url(['lang' => $lang, 'controller' => 'services', 'action' => 'view', $v['Service']['strid_' . $lang]], true),
-					'changefreq' => 'daily'
+					'changefreq' => 'daily',
+					'lastmod'=> date('c', time()),
+					'priority'=>'0.9',
 				];
 
 				if ($this->output_related_langs) {
@@ -334,7 +346,9 @@ class SitemapController extends AppController
 			foreach ($langs as $lang) {
 				$url = [
 					'loc' => Router::url(['lang' => $lang, 'controller' => 'articles', 'action' => 'view', $v['Article']['strid_' . $lang]], true),
-					'changefreq' => 'daily'
+					'changefreq' => 'daily',
+					'lastmod'=> date('c', time()),
+					'priority'=>'0.9',
 				];
 
 				if ($this->output_related_langs) {
@@ -377,7 +391,9 @@ class SitemapController extends AppController
 			foreach ($langs as $lang) {
 				$url = [
 					'loc' => Router::url(['lang' => $lang, 'controller' => 'portfolio', 'action' => 'view', $v['Portfolio']['strid_' . $lang]], true),
-					'changefreq' => 'daily'
+					'changefreq' => 'daily',
+					'lastmod'=> date('c', time()),
+					'priority'=>'0.9',
 				];
 
 				if ($this->output_related_langs) {
