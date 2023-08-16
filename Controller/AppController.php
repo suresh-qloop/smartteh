@@ -88,8 +88,14 @@ class AppController extends Controller
 		}, $this->langs);
 		$fields[] = 'translated';
 
+		$conditions['strid_'. $language] = $slug;
+
+		if ($model != 'Section') {
+			$conditions['enabled'] = 1;
+		} 
+
 		$data = $this->$model->find('all', [
-			'conditions' => ['enabled' => 1,'strid_'. $language => $slug],
+			'conditions' => $conditions,
 			'fields' => $fields
 		]);
 
