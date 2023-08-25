@@ -1,8 +1,10 @@
 <?php
 
 $xmlArray = Xml::fromArray($sitemap);
+$xmlImagesArray = Xml::fromArray($sitemapimages);
 
-echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
+echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" 
+    xmlns:image= "http://www.google.com/schemas/sitemap-image/1.1">';
 
 foreach ($xmlArray->url as $url) {
     echo '<url>';
@@ -10,6 +12,17 @@ foreach ($xmlArray->url as $url) {
     echo '<lastmod>' . date("d-m-Y h:i:s", strtotime($url->lastmod)) . '</lastmod>';
     echo '<changefreq>' . htmlspecialchars($url->changefreq) . '</changefreq>';
     echo '<priority>' . $url->priority . '</priority>';
+    echo '</url>';
+}
+
+foreach ($xmlImagesArray->url as $image_url) {
+    echo '<url>';
+    echo '<loc>' . $image_url->href . '</loc>';  
+    foreach ($image_url->images as $img) {     
+    echo '<image:image>';
+    echo '<image:loc>'.$img.'</image:loc>';
+    echo '</image:image>';
+    }
     echo '</url>';
 }
 

@@ -12,7 +12,7 @@ class SitemapController extends AppController
 	/**
 	 * @var array
 	 */
-	public $uses = ['Section', 'Product', 'Category', 'Industry', 'Service', 'Article', 'Portfolio'];
+	public $uses = ['Section', 'Product', 'Category', 'Industry', 'Service', 'Article', 'Portfolio','Categories','Portfolio_images','Product_images','ProductImage'];
 
 	/**
 	 * @var array
@@ -48,7 +48,6 @@ class SitemapController extends AppController
 		$urls = array_merge($urls, $this->articlesUrls());
 		$urls = array_merge($urls, $this->portfoliosUrls());
 
-
 		$sitemap = [
 			'urlset' => [
 				'xmlns:' => 'http://www.sitemaps.org/schemas/sitemap/0.9',
@@ -57,9 +56,68 @@ class SitemapController extends AppController
 			]
 		];
 
+        $image_urls = [];
+        $image_urls = array_merge($image_urls, $this->productImageUrls());
+
+        $sitemapimages = [
+			'urlset' => [
+				'xmlns:' => 'http://www.sitemaps.org/schemas/sitemap/0.9',
+				'xmlns:image' => 'http://www.google.com/schemas/sitemap-image/1.1',
+				'url' => $image_urls
+			]
+		];
+
 		// $xml = Xml::fromArray($sitemap);
 
-		$this->set(compact('sitemap'));
+		$this->set(compact('sitemap','sitemapimages'));
+	}
+
+    private function productImageUrls(): array {
+		$image_urls = [];
+
+		$urls_products = $this->Product->find('all', [
+            'conditions' => ['enabled' => 1]
+        ]);
+
+        $site_url  = "https://www.www.localhost/smartteh";
+
+        foreach ($urls_products as $key) {
+         
+            $product_id = $key['Product']['id'];
+            $category_id = $key['Product']['category_id'];
+        
+            $urls_images_by_product_id = $this->Product_images->find('all', [
+                    'conditions' => ['enabled' => 1,'product_id' => $product_id]
+                ]);
+            
+        
+            $urls_images_by_category =  $this->Categories->find('all', [
+                    'conditions' => ['enabled' => 1,'id' => $category_id]
+                ]);
+
+
+            foreach ($urls_images_by_product_id as $keyex) {
+        
+                $image_urls[$product_id]['images'][] = $site_url."/uploads/images/products/large/".$keyex['Product_images']['filename'];
+                
+            }
+            $image_urls[$product_id]['href'] = $site_url.'/iekartas/'.$urls_images_by_category[0]['Categories']['strid_lv'].'/'.$key["strid_lv"].'';
+            
+            if (!empty($key["strid_ru"])) {
+            $image_urls[$product_id]['href_ru'] = $site_url.'/ru/categories/'.$urls_images_by_category[0]['Categories']['strid_ru'].'/'.$key["strid_ru"].'';
+            }
+            if (!empty($key["strid_es"])) {
+            $image_urls[$product_id]['href_es'] = $site_url.'/es/categories/'.$urls_images_by_category[0]['Categories']['strid_es'].'/'.$key["strid_es"].'';
+            }
+            if (!empty($key["strid_de"])) {
+            $image_urls[$product_id]['href_de'] = $site_url.'/de/categories/'.$urls_images_by_category[0]['Categories']['strid_de'].'/'.$key["strid_de"].'';
+            }
+            if (!empty($key["strid_en"])) {
+            $image_urls[$product_id]['href_en'] = $site_url.'/en/categories/'.$urls_images_by_category[0]['Categories']['strid_en'].'/'.$key["strid_en"].'';
+            }
+        }
+
+		return $image_urls;
 	}
 
 	/**

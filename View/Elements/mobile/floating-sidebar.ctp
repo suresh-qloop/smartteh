@@ -20,11 +20,11 @@
 	<?php endif ?>
 
 	<!--    <a href="#about" data-network="facebook"><i class="fa fa-share-alt" aria-hidden="true"></i></a>-->
-	<?php if (isset($data['Product'])): ?>
+	<!-- <?php if (isset($data['Product'])): ?>
 		<?= $this->Html->link('<i class="fa fa-file-pdf-o hover-download" aria-hidden="true"></i>',
 			['action' => 'pdf', $data['Product']['strid_'.$lang]],
 			['title' => __('Lejupielādēt PDF'), 'escape' => false]) ?>
-	<?php endif ?>
+	<?php endif ?> -->
 	<button id="contactForm" title="<?= __('Kontakti') ?>"><i class="fa fa-envelope" aria-hidden="true"></i></button>
 
 	<button id="callbackForm" title="<?= __('Atzvanīt') ?>"><i class="fa fa-phone" aria-hidden="true"></i></button>
