@@ -19,6 +19,8 @@ class SitemapController extends AppController
 	 */
 	private $langs = [];
 
+	public $site_url  = "https://www.www.localhost/smartteh";
+
 	/**
 	 * @var bool
 	 */
@@ -56,10 +58,14 @@ class SitemapController extends AppController
 			]
 		];
 
-        $image_urls = [];
-        $image_urls = array_merge($image_urls, $this->productImageUrls());
+		$image_urls = [];
+		$image_urls = array_merge($image_urls, $this->productImageUrls());
+		$image_urls = array_merge($image_urls, $this->industiresImageUrls());
+		$image_urls = array_merge($image_urls, $this->articlesImageUrls());
+		$image_urls = array_merge($image_urls, $this->portfoliosImageUrls());
+		$image_urls = array_merge($image_urls, $this->servicesImageUrls());
 
-        $sitemapimages = [
+		$sitemapimages = [
 			'urlset' => [
 				'xmlns:' => 'http://www.sitemaps.org/schemas/sitemap/0.9',
 				'xmlns:image' => 'http://www.google.com/schemas/sitemap-image/1.1',
@@ -72,50 +78,224 @@ class SitemapController extends AppController
 		$this->set(compact('sitemap','sitemapimages'));
 	}
 
-    private function productImageUrls(): array {
+	private function productImageUrls(): array {
 		$image_urls = [];
 
 		$urls_products = $this->Product->find('all', [
-            'conditions' => ['enabled' => 1]
-        ]);
+			'conditions' => ['enabled' => 1]
+		]);
 
-        $site_url  = "https://www.www.localhost/smartteh";
+		foreach ($urls_products as $key) {
 
-        foreach ($urls_products as $key) {
-         
-            $product_id = $key['Product']['id'];
-            $category_id = $key['Product']['category_id'];
-        
-            $urls_images_by_product_id = $this->Product_images->find('all', [
-                    'conditions' => ['enabled' => 1,'product_id' => $product_id]
-                ]);
-            
-        
-            $urls_images_by_category =  $this->Categories->find('all', [
-                    'conditions' => ['enabled' => 1,'id' => $category_id]
-                ]);
+			$product_id = $key['Product']['id'];
+			$category_id = $key['Product']['category_id'];
 
+			$urls_images_by_product_id = $this->Product_images->find('all', [
+				'conditions' => ['enabled' => 1,'product_id' => $product_id]
+			]);
+			$urls_images_by_category =  $this->Categories->find('all', [
+				'conditions' => ['enabled' => 1,'id' => $category_id]
+			]);
 
-            foreach ($urls_images_by_product_id as $keyex) {
-        
-                $image_urls[$product_id]['images'][] = $site_url."/uploads/images/products/large/".$keyex['Product_images']['filename'];
-                
-            }
-            $image_urls[$product_id]['href'] = $site_url.'/iekartas/'.$urls_images_by_category[0]['Categories']['strid_lv'].'/'.$key["strid_lv"].'';
-            
-            if (!empty($key["strid_ru"])) {
-            $image_urls[$product_id]['href_ru'] = $site_url.'/ru/categories/'.$urls_images_by_category[0]['Categories']['strid_ru'].'/'.$key["strid_ru"].'';
-            }
-            if (!empty($key["strid_es"])) {
-            $image_urls[$product_id]['href_es'] = $site_url.'/es/categories/'.$urls_images_by_category[0]['Categories']['strid_es'].'/'.$key["strid_es"].'';
-            }
-            if (!empty($key["strid_de"])) {
-            $image_urls[$product_id]['href_de'] = $site_url.'/de/categories/'.$urls_images_by_category[0]['Categories']['strid_de'].'/'.$key["strid_de"].'';
-            }
-            if (!empty($key["strid_en"])) {
-            $image_urls[$product_id]['href_en'] = $site_url.'/en/categories/'.$urls_images_by_category[0]['Categories']['strid_en'].'/'.$key["strid_en"].'';
-            }
-        }
+			foreach ($urls_images_by_product_id as $keyex) {
+
+				$image_urls[$product_id]['images'][] = $this->site_url."/uploads/images/products/large/".$keyex['Product_images']['filename'];
+
+			}
+			
+			$image_urls[$product_id]['href'] = $this->site_url.'/iekartas/'.$urls_images_by_category[0]['Categories']['strid_lv'].'/'.$key["strid_lv"].'';
+			
+			if (!empty($key["strid_ru"])) {
+				$image_urls[$product_id]['href_ru'] = $this->site_url.'/ru/categories/'.$urls_images_by_category[0]['Categories']['strid_ru'].'/'.$key["strid_ru"].'';
+			}
+			if (!empty($key["strid_es"])) {
+				$image_urls[$product_id]['href_es'] = $this->site_url.'/es/categories/'.$urls_images_by_category[0]['Categories']['strid_es'].'/'.$key["strid_es"].'';
+			}
+			if (!empty($key["strid_de"])) {
+				$image_urls[$product_id]['href_de'] = $this->site_url.'/de/categories/'.$urls_images_by_category[0]['Categories']['strid_de'].'/'.$key["strid_de"].'';
+			}
+			if (!empty($key["strid_en"])) {
+				$image_urls[$product_id]['href_en'] = $this->site_url.'/en/categories/'.$urls_images_by_category[0]['Categories']['strid_en'].'/'.$key["strid_en"].'';
+			}
+		}
+		return $image_urls;
+	}
+
+	private function relatedLangs(string $lang): array {
+		return array_filter($this->langs, static function ($this_lang) use ($lang) {
+			return $this_lang !== $lang;
+		});
+	}
+
+	private function industiresImageUrls(): array {
+		$image_urls = [];
+
+		$fields = array_map(static function ($lang) {
+			return 'strid_' . $lang;
+		}, $this->langs);
+		$fields[] = 'translated';
+		$fields[] = 'id';
+		$fields[] = 'filename_menu';
+		$fields[] = 'filename_header';
+		$fields[] = 'filename_brick';
+
+		$data = $this->Industry->find('all', [
+			'conditions' => ['enabled' => 1],
+			'fields' => $fields
+		]);
+
+		foreach ($data as $k=>$v) {
+			$langs = array_intersect($this->langs, $v['Industry']['translated']);
+
+			foreach ($langs as $lang) {
+				$image_url['href'] = 
+					Router::url(['lang' => $lang, 'controller' => 'industries', 'action' => 'view', $v['Industry']['strid_' . $lang]], true);
+				
+
+				if ($this->output_related_langs) {
+					$related_langs = array_intersect($this->relatedLangs($lang), $v['Industry']['translated']);
+					if ($related_langs) {
+						$image_url['images'] = [];
+						$image_url['images'][] = $this->site_url."/uploads/images/industries/menu/".$v['Industry']['filename_menu'];
+						$image_url['images'][] = $this->site_url."/uploads/images/industries/menu/".$v['Industry']['filename_header'];
+						$image_url['images'][] = $this->site_url."/uploads/images/industries/menu/".$v['Industry']['filename_brick'];
+					}
+				}
+
+				$image_urls[] = $image_url;
+			}
+		}
+
+		return $image_urls;
+	}
+
+	private function articlesImageUrls(): array {
+		$image_urls = [];
+
+		$fields = array_map(static function ($lang) {
+			return 'strid_' . $lang;
+		}, $this->langs);
+		$fields[] = 'translated';
+		$fields[] = 'id';
+		$fields[] = 'filename';
+
+		$data = $this->Article->find('all', [
+			'conditions' => ['enabled' => 1],
+			'fields' => $fields
+		]);
+
+		foreach ($data as $k=>$v) {
+			$langs = array_intersect($this->langs, $v['Article']['translated']);
+
+			foreach ($langs as $lang) {
+				$image_url['href'] = 
+					Router::url(['lang' => $lang, 'controller' => 'articles', 'action' => 'view', $v['Article']['strid_' . $lang]], true);
+				
+
+				if ($this->output_related_langs) {
+					$related_langs = array_intersect($this->relatedLangs($lang), $v['Article']['translated']);
+					if ($related_langs) {
+						$image_url['images'] = [];
+						$image_url['images'][] = $this->site_url."/uploads/images/articles/thumb/".$v['Article']['filename'];
+					}
+				}
+
+				$image_urls[] = $image_url;
+			}
+		}
+
+		return $image_urls;
+	}
+
+	private function portfoliosImageUrls(): array {
+		$image_urls = [];
+		
+
+		$fields = array_map(static function ($lang) {
+			return 'strid_' . $lang;
+		}, $this->langs);
+		$fields[] = 'translated';
+		$fields[] = 'id';
+		$fields[] = 'filename';
+		$fields[] = 'filename_wide';
+
+		$data = $this->Portfolio->find('all', [
+			'conditions' => ['enabled' => 1],
+			'fields' => $fields
+		]);
+
+		foreach ($data as $k=>$v) {
+			$portfolio_id = $v['Portfolio']['id'];
+			$langs = array_intersect($this->langs, $v['Portfolio']['translated']);
+
+			$data_image = $this->Portfolio_images->find('all', [
+				'conditions' => ['enabled' => 1,'portfolio_id' => $portfolio_id]
+			]);
+
+			foreach ($langs as $lang) {
+				$image_url['href'] = 
+					Router::url(['lang' => $lang, 'controller' => 'portfolio', 'action' => 'view', $v['Portfolio']['strid_' . $lang]], true);
+				
+
+				if ($this->output_related_langs) {
+					$related_langs = array_intersect($this->relatedLangs($lang), $v['Portfolio']['translated']);
+					if ($related_langs) {
+						$image_url['images'] = [];
+						$image_url['images'][] = $this->site_url."/uploads/images/portfolio/large/".$v['Portfolio']['filename'];
+						if (!empty($v['Portfolio']['filename_wide'])) {
+							$image_url['images'][] = $this->site_url."/uploads/images/portfolio/large/".$v['Portfolio']['filename_wide'];
+						}
+						foreach ($data_image as $img) {
+							$image_url['images'][] = $this->site_url."/uploads/images/portfolio/large/".$img['Portfolio_images']['filename'];
+						}
+					}
+				}
+
+				$image_urls[] = $image_url;
+			}
+		}
+
+		return $image_urls;
+	}
+
+	private function servicesImageUrls(): array {
+		$image_urls = [];
+
+		$fields = array_map(static function ($lang) {
+			return 'strid_' . $lang;
+		}, $this->langs);
+		$fields[] = 'translated';
+		$fields[] = 'id';
+		$fields[] = 'filename_brick';
+		$fields[] = 'filename_menu';
+		$fields[] = 'filename_mobile';
+
+		$data = $this->Service->find('all', [
+			'conditions' => ['enabled' => 1],
+			'fields' => $fields
+		]);
+
+		foreach ($data as $k=>$v) {
+			$langs = array_intersect($this->langs, $v['Service']['translated']);
+
+			foreach ($langs as $lang) {
+				$image_url['href'] = 
+					Router::url(['lang' => $lang, 'controller' => 'services', 'action' => 'view', $v['Service']['strid_' . $lang]], true);
+				
+
+				if ($this->output_related_langs) {
+					$related_langs = array_intersect($this->relatedLangs($lang), $v['Service']['translated']);
+					if ($related_langs) {
+						$image_url['images'] = [];
+						$image_url['images'][] = $this->site_url."/uploads/images/services/thumb/".$v['Service']['filename_brick'];
+						$image_url['images'][] = $this->site_url."/uploads/images/services/thumb/".$v['Service']['filename_menu'];
+						$image_url['images'][] = $this->site_url."/uploads/images/services/thumb/".$v['Service']['filename_mobile'];
+					}
+				}
+
+				$image_urls[] = $image_url;
+			}
+		}
 
 		return $image_urls;
 	}
@@ -236,11 +416,6 @@ class SitemapController extends AppController
 	 *
 	 * @return array
 	 */
-	private function relatedLangs(string $lang): array {
-		return array_filter($this->langs, static function ($this_lang) use ($lang) {
-			return $this_lang !== $lang;
-		});
-	}
 
 	/**
 	 * @return array
@@ -472,7 +647,6 @@ class SitemapController extends AppController
 				$urls[] = $url;
 			}
 		}
-
 		return $urls;
 	}
 }
