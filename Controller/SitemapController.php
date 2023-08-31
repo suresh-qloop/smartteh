@@ -1,6 +1,7 @@
 <?php
 
 App::uses('AppController', 'Controller');
+App::uses('Router', 'Routing');
 
 class SitemapController extends AppController
 {
@@ -18,8 +19,6 @@ class SitemapController extends AppController
 	 * @var array
 	 */
 	private $langs = [];
-
-	public $site_url  = "https://www.www.localhost/smartteh";
 
 	/**
 	 * @var bool
@@ -47,17 +46,73 @@ class SitemapController extends AppController
 		$urls = array_merge($urls, $this->industriesUrls());
 		$urls = array_merge($urls, $this->productsUrls());
 		$urls = array_merge($urls, $this->servicesUrls());
-		$urls = array_merge($urls, $this->articlesUrls());
+		// $urls = array_merge($urls, $this->articlesUrls());
 		$urls = array_merge($urls, $this->portfoliosUrls());
 
-		$sitemap = [
-			'urlset' => [
-				'xmlns:' => 'http://www.sitemaps.org/schemas/sitemap/0.9',
-				'xmlns:xhtml' => 'http://www.w3.org/1999/xhtml',
-				'url' => $urls
-			]
-		];
+		$timex = date('Y-m-d',time());
+		$filename = $_SERVER['DOCUMENT_ROOT']."/smartteh/webroot/sitemap-index.xml";
 
+		if (file_exists($filename)) {
+  
+		} else {
+			
+		$dataa = '<?xml version="1.0" encoding="UTF-8"?>
+		
+			<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+			
+			<sitemap>
+					<loc>'.Router::url('/', true).'/webroot/sitemap-index.xml</loc>
+					<lastmod>'.$timex.'</lastmod>
+			</sitemap>
+
+			<sitemap>
+					<loc>'.Router::url('/', true).'/webroot/sitemap-general.xml</loc>
+					<lastmod>'.$timex.'</lastmod>
+			</sitemap>
+			
+			<sitemap>
+					<loc>'.Router::url('/', true).'/webroot/sitemap-images.xml</loc>
+					<lastmod>'.$timex.'</lastmod>
+			</sitemap>
+			
+			<sitemap>
+					<loc>'.Router::url('/', true).'/webroot/sitemap-posts.xml</loc>
+					<lastmod>'.$timex.'</lastmod>
+			</sitemap>
+			
+			</sitemapindex>';
+		 file_put_contents($filename, $dataa);
+			
+		}
+
+		// general urls
+		$html_gen = '<?xml version="1.0" encoding="UTF-8"?>';
+		$html_gen .= '
+		<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+			xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:hreflang="http://www.w3.org/1999/xhtml/rel">';
+
+		foreach ($urls as $url) {
+
+			$html_gen .= '
+				<url>
+					<loc>'.$url['loc'].'</loc>';
+		foreach ($url['xhtml:link'] as $alternate) {
+			$html_gen .='
+					<xhtml:link rel="' . htmlspecialchars($alternate['@rel']) . '" hreflang="' . htmlspecialchars($alternate['@hreflang']) . '" href="' . htmlspecialchars($alternate['@href']) . '" />';
+		}
+		$html_gen .='
+					<lastmod>'.date("d-m-Y h:i:s", strtotime($url['lastmod'])).'</lastmod>
+					<changefreq>'.htmlspecialchars($url['changefreq']).'</changefreq>
+					<priority>'.$url['priority'].'</priority>
+				</url>';
+		}
+
+		$html_gen .= '
+		</urlset>';
+
+		file_put_contents( $_SERVER['DOCUMENT_ROOT']."/smartteh/webroot/sitemap-general.xml", $html_gen);
+
+		// images urls
 		$image_urls = [];
 		$image_urls = array_merge($image_urls, $this->productImageUrls());
 		$image_urls = array_merge($image_urls, $this->industiresImageUrls());
@@ -65,61 +120,109 @@ class SitemapController extends AppController
 		$image_urls = array_merge($image_urls, $this->portfoliosImageUrls());
 		$image_urls = array_merge($image_urls, $this->servicesImageUrls());
 
-		$sitemapimages = [
-			'urlset' => [
-				'xmlns:' => 'http://www.sitemaps.org/schemas/sitemap/0.9',
-				'xmlns:image' => 'http://www.google.com/schemas/sitemap-image/1.1',
-				'url' => $image_urls
-			]
-		];
+		$html_image = '<?xml version="1.0" encoding="UTF-8"?>';
+		$html_image .= '
+		<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+			xmlns:image= "http://www.google.com/schemas/sitemap-image/1.1">';
 
-		// $xml = Xml::fromArray($sitemap);
+		foreach ($image_urls as $image_url) {
 
-		$this->set(compact('sitemap','sitemapimages'));
+		$html_image .= '
+		<url>
+			<loc>'.$image_url['href'].'</loc>';
+		foreach ($image_url['images'] as $img) {
+		$html_image .='
+			<image:image>
+				<image:loc>'.$img.'</image:loc>
+			</image:image>';
+		}
+		$html_image .='
+		</url>';
+		}
+
+		$html_image .= '
+		</urlset>';
+
+		file_put_contents( $_SERVER['DOCUMENT_ROOT']."/smartteh/webroot/sitemap-images.xml", $html_image);
+
+		// post or articals urls
+		$post_urls = [];
+		$post_urls = array_merge($post_urls, $this->articlesUrls());
+
+		$html_post = '<?xml version="1.0" encoding="UTF-8"?>';
+		$html_post .= '
+		<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+			xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:hreflang="http://www.w3.org/1999/xhtml/rel">';
+
+		foreach ($post_urls as $url) {
+
+			$html_post .= '
+				<url>
+					<loc>'.$url['loc'].'</loc>';
+		foreach ($url['xhtml:link'] as $alternate) {
+			$html_post .='
+					<xhtml:link rel="' . htmlspecialchars($alternate['@rel']) . '" hreflang="' . htmlspecialchars($alternate['@hreflang']) . '" href="' . htmlspecialchars($alternate['@href']) . '" />';
+		}
+		$html_post .='
+					<lastmod>'.date("d-m-Y h:i:s", strtotime($url['lastmod'])).'</lastmod>
+					<changefreq>'.htmlspecialchars($url['changefreq']).'</changefreq>
+					<priority>'.$url['priority'].'</priority>
+				</url>';
+		}
+
+		$html_post .= '
+		</urlset>';
+
+		file_put_contents( $_SERVER['DOCUMENT_ROOT']."/smartteh/webroot/sitemap-posts.xml", $html_post);
 	}
 
 	private function productImageUrls(): array {
 		$image_urls = [];
 
-		$urls_products = $this->Product->find('all', [
-			'conditions' => ['enabled' => 1]
+		$fields = array_map(static function ($lang) {
+			return 'strid_' . $lang;
+		}, $this->langs);
+		$fields[] = 'translated';
+		$fields[] = 'id';
+		$fields[] = 'filename';
+		$fields[] = 'category_id';
+
+		$data = $this->Product->find('all', [
+			'conditions' => ['enabled' => 1],
+			'fields' => $fields
 		]);
 
-		foreach ($urls_products as $key) {
+		foreach ($data as $k=>$v) {
+			$product_id = $v['Product']['id'];
+			$category_id = $v['Product']['category_id'];
+			$langs = array_intersect($this->langs, $v['Product']['translated']);
 
-			$product_id = $key['Product']['id'];
-			$category_id = $key['Product']['category_id'];
-
-			$urls_images_by_product_id = $this->Product_images->find('all', [
+			$data_image = $this->Product_images->find('all', [
 				'conditions' => ['enabled' => 1,'product_id' => $product_id]
 			]);
-			$urls_images_by_category =  $this->Categories->find('all', [
-				'conditions' => ['enabled' => 1,'id' => $category_id]
-			]);
 
-			foreach ($urls_images_by_product_id as $keyex) {
+			foreach ($langs as $lang) {
+				$image_url['href'] = 
+					Router::url(['lang' => $lang, 'controller' => 'products', 'action' => 'view', $v['Product']['strid_' . $lang]], true);
+				
+				if ($this->output_related_langs) {
+					$related_langs = array_intersect($this->relatedLangs($lang), $v['Product']['translated']);
+					if ($related_langs) {
+						$image_url['images'] = [];
+						$image_url['images'][] = Router::url('/', true)."uploads/images/products/small/".$v['Product']['filename'];
+						foreach ($data_image as $img) {
+							$image_url['images'][] = Router::url('/', true)."uploads/images/products/medium/".$img['Product_images']['filename'];
+						}
+					}
+				}
 
-				$image_urls[$product_id]['images'][] = $this->site_url."/uploads/images/products/large/".$keyex['Product_images']['filename'];
-
-			}
-			
-			$image_urls[$product_id]['href'] = $this->site_url.'/iekartas/'.$urls_images_by_category[0]['Categories']['strid_lv'].'/'.$key["strid_lv"].'';
-			
-			if (!empty($key["strid_ru"])) {
-				$image_urls[$product_id]['href_ru'] = $this->site_url.'/ru/categories/'.$urls_images_by_category[0]['Categories']['strid_ru'].'/'.$key["strid_ru"].'';
-			}
-			if (!empty($key["strid_es"])) {
-				$image_urls[$product_id]['href_es'] = $this->site_url.'/es/categories/'.$urls_images_by_category[0]['Categories']['strid_es'].'/'.$key["strid_es"].'';
-			}
-			if (!empty($key["strid_de"])) {
-				$image_urls[$product_id]['href_de'] = $this->site_url.'/de/categories/'.$urls_images_by_category[0]['Categories']['strid_de'].'/'.$key["strid_de"].'';
-			}
-			if (!empty($key["strid_en"])) {
-				$image_urls[$product_id]['href_en'] = $this->site_url.'/en/categories/'.$urls_images_by_category[0]['Categories']['strid_en'].'/'.$key["strid_en"].'';
+				$image_urls[] = $image_url;
 			}
 		}
+
 		return $image_urls;
 	}
+
 
 	private function relatedLangs(string $lang): array {
 		return array_filter($this->langs, static function ($this_lang) use ($lang) {
@@ -156,9 +259,9 @@ class SitemapController extends AppController
 					$related_langs = array_intersect($this->relatedLangs($lang), $v['Industry']['translated']);
 					if ($related_langs) {
 						$image_url['images'] = [];
-						$image_url['images'][] = $this->site_url."/uploads/images/industries/menu/".$v['Industry']['filename_menu'];
-						$image_url['images'][] = $this->site_url."/uploads/images/industries/menu/".$v['Industry']['filename_header'];
-						$image_url['images'][] = $this->site_url."/uploads/images/industries/menu/".$v['Industry']['filename_brick'];
+						$image_url['images'][] = Router::url('/', true)."uploads/images/industries/menu/".$v['Industry']['filename_menu'];
+						$image_url['images'][] = Router::url('/', true)."uploads/images/industries/header/".$v['Industry']['filename_header'];
+						$image_url['images'][] = Router::url('/', true)."uploads/images/industries/brick/".$v['Industry']['filename_brick'];
 					}
 				}
 
@@ -196,7 +299,7 @@ class SitemapController extends AppController
 					$related_langs = array_intersect($this->relatedLangs($lang), $v['Article']['translated']);
 					if ($related_langs) {
 						$image_url['images'] = [];
-						$image_url['images'][] = $this->site_url."/uploads/images/articles/thumb/".$v['Article']['filename'];
+						$image_url['images'][] = Router::url('/', true)."uploads/images/articles/thumb/".$v['Article']['filename'];
 					}
 				}
 
@@ -241,12 +344,12 @@ class SitemapController extends AppController
 					$related_langs = array_intersect($this->relatedLangs($lang), $v['Portfolio']['translated']);
 					if ($related_langs) {
 						$image_url['images'] = [];
-						$image_url['images'][] = $this->site_url."/uploads/images/portfolio/large/".$v['Portfolio']['filename'];
+						$image_url['images'][] = Router::url('/', true)."uploads/images/portfolio/".$v['Portfolio']['filename'];
 						if (!empty($v['Portfolio']['filename_wide'])) {
-							$image_url['images'][] = $this->site_url."/uploads/images/portfolio/large/".$v['Portfolio']['filename_wide'];
+							$image_url['images'][] = Router::url('/', true)."uploads/images/portfolio/wide/".$v['Portfolio']['filename_wide'];
 						}
 						foreach ($data_image as $img) {
-							$image_url['images'][] = $this->site_url."/uploads/images/portfolio/large/".$img['Portfolio_images']['filename'];
+							$image_url['images'][] = Router::url('/', true)."uploads/images/portfolio/large/".$img['Portfolio_images']['filename'];
 						}
 					}
 				}
@@ -287,9 +390,9 @@ class SitemapController extends AppController
 					$related_langs = array_intersect($this->relatedLangs($lang), $v['Service']['translated']);
 					if ($related_langs) {
 						$image_url['images'] = [];
-						$image_url['images'][] = $this->site_url."/uploads/images/services/thumb/".$v['Service']['filename_brick'];
-						$image_url['images'][] = $this->site_url."/uploads/images/services/thumb/".$v['Service']['filename_menu'];
-						$image_url['images'][] = $this->site_url."/uploads/images/services/thumb/".$v['Service']['filename_mobile'];
+						$image_url['images'][] = Router::url('/', true)."uploads/images/services/brick/".$v['Service']['filename_brick'];
+						$image_url['images'][] = Router::url('/', true)."uploads/images/services/menu/".$v['Service']['filename_menu'];
+						$image_url['images'][] = Router::url('/', true)."uploads/images/services/mobile/".$v['Service']['filename_mobile'];
 					}
 				}
 
@@ -307,29 +410,37 @@ class SitemapController extends AppController
 	 */
 	private function moduleUrls(string $controller): array {
 		$urls = [];
-		foreach ($this->langs as $lang) {
-			$url = [
-				'loc' => rtrim(Router::url(['lang' => $lang, 'controller' => $controller, 'action' => 'index'], true), '/'),
-				'changefreq' => 'daily',
-				'lastmod'=> date('c', time()),
-				'priority'=>'0.1',
-			];
 
-			if ($this->output_related_langs) {
-				$url['xhtml:link'] = [];
-				foreach ($this->relatedLangs($lang) as $related_lang) {
-					$url['xhtml:link'][] = [
-						'@rel' => 'alternate',
-						'@hreflang' => $related_lang,
-						'@href' => Router::url(['lang' => $related_lang, 'controller' => $controller, 'action' => 'index'], true)
-					];
-				}
-			}
-
-			$urls[] = $url;
+		if (in_array("en", $this->langs)) {
+			$la = 'en';
+		} elseif (in_array("lv", $this->langs)) {
+			$la = 'lv';
+		} elseif (in_array("ru", $this->langs)) {
+			$la = 'ru';
+		} elseif (in_array("es", $this->langs)) {
+			$la = 'es';
+		} else {
+			$la = 'de';
 		}
+		$url = [
+			'loc' => rtrim(Router::url(['lang' => $la, 'controller' => $controller, 'action' => 'index'], true), '/'),
+			'changefreq' => 'daily',
+			'lastmod'=> date('c', time()),
+			'priority'=>'0.1',
+		];
 
-		return $urls;
+		$url['xhtml:link'] = [];
+		foreach ($this->langs as $lang) {
+			if ($lang != $la) {
+				$url['xhtml:link'][] = [
+					'@rel' => 'alternate',
+					'@hreflang' => $lang,
+					'@href' => Router::url(['lang' => $lang, 'controller' => $controller, 'action' => 'index'], true)
+				];
+			}
+		}
+		$urls[] = $url;		
+		return $urls;	
 	}
 
 	/**
@@ -382,32 +493,37 @@ class SitemapController extends AppController
 		foreach ($data as $v) {
 			$langs = array_intersect($this->langs, $v['Category']['translated']);
 
-			foreach ($langs as $lang) {
-				$url = [
-					'loc' => Router::url(['lang' => $lang, 'controller' => 'categories', 'action' => 'view', $v['Category']['strid_' . $lang]], true),
-					'changefreq' => 'daily',
-					'lastmod'=> date('c', time()),
-					'priority'=>'0.9',
-				];
-
-				if ($this->output_related_langs) {
-					$related_langs = array_intersect($this->relatedLangs($lang), $v['Category']['translated']);
-					if ($related_langs) {
-						$url['xhtml:link'] = [];
-						foreach ($related_langs as $related_lang) {
-							$url['xhtml:link'][] = [
-								'@rel' => 'alternate',
-								'@hreflang' => $related_lang,
-								'@href' => Router::url(['lang' => $related_lang, 'controller' => 'categories', 'action' => 'view', $v['Category']['strid_' . $related_lang]], true)
-							];
-						}
-					}
-				}
-
-				$urls[] = $url;
-			}
+			if (in_array("en", $this->langs)) {
+			$la = 'en';
+		} elseif (in_array("lv", $this->langs)) {
+			$la = 'lv';
+		} elseif (in_array("ru", $this->langs)) {
+			$la = 'ru';
+		} elseif (in_array("es", $this->langs)) {
+			$la = 'es';
+		} else {
+			$la = 'de';
 		}
 
+			$url = [
+				'loc' => Router::url(['lang' => $la, 'controller' => 'categories', 'action' => 'view', $v['Category']['strid_'.$la]], true),
+				'changefreq' => 'daily',
+				'lastmod'=> date('c', time()),
+				'priority'=>'0.9',
+			];
+
+			$url['xhtml:link'] = [];
+			foreach ($langs as $lang) {
+				if ($lang != $la) {
+					$url['xhtml:link'][] = [
+						'@rel' => 'alternate',
+						'@hreflang' => $lang,
+						'@href' => Router::url(['lang' => $lang, 'controller' => 'categories', 'action' => 'view', $v['Category']['strid_' . $lang]], true)
+					];
+				}
+			}
+			$urls[] = $url;
+		}
 		return $urls;
 	}
 
@@ -436,30 +552,36 @@ class SitemapController extends AppController
 		foreach ($data as $v) {
 			$langs = array_intersect($this->langs, $v['Industry']['translated']);
 
+		if (in_array("en", $this->langs)) {
+			$la = 'en';
+		} elseif (in_array("lv", $this->langs)) {
+			$la = 'lv';
+		} elseif (in_array("ru", $this->langs)) {
+			$la = 'ru';
+		} elseif (in_array("es", $this->langs)) {
+			$la = 'es';
+		} else {
+			$la = 'de';
+		}
+
+			$url = [
+				'loc' => Router::url(['lang' => $la, 'controller' => 'industries', 'action' => 'view', $v['Industry']['strid_' . $la]], true),
+				'changefreq' => 'daily',
+				'lastmod'=> date('c', time()),
+				'priority'=>'0.9',
+			];
+
+			$url['xhtml:link'] = [];
 			foreach ($langs as $lang) {
-				$url = [
-					'loc' => Router::url(['lang' => $lang, 'controller' => 'industries', 'action' => 'view', $v['Industry']['strid_' . $lang]], true),
-					'changefreq' => 'daily',
-					'lastmod'=> date('c', time()),
-					'priority'=>'0.9',
-				];
-
-				if ($this->output_related_langs) {
-					$related_langs = array_intersect($this->relatedLangs($lang), $v['Industry']['translated']);
-					if ($related_langs) {
-						$url['xhtml:link'] = [];
-						foreach ($related_langs as $related_lang) {
-							$url['xhtml:link'][] = [
-								'@rel' => 'alternate',
-								'@hreflang' => $related_lang,
-								'@href' => Router::url(['lang' => $related_lang, 'controller' => 'industries', 'action' => 'view', $v['Industry']['strid_' . $related_lang]], true)
-							];
-						}
-					}
+				if ($lang != $la) {
+					$url['xhtml:link'][] = [
+						'@rel' => 'alternate',
+						'@hreflang' => $lang,
+						'@href' => Router::url(['lang' => $lang, 'controller' => 'industries', 'action' => 'view', $v['Industry']['strid_' . $lang]], true)
+					];
 				}
-
-				$urls[] = $url;
 			}
+			$urls[] = $url;
 		}
 
 		return $urls;
@@ -484,32 +606,37 @@ class SitemapController extends AppController
 		foreach ($data as $v) {
 			$langs = array_intersect($this->langs, $v['Product']['translated']);
 
-			foreach ($langs as $lang) {
-				$url = [
-					'loc' => Router::url(['lang' => $lang, 'controller' => 'products', 'action' => 'view', $v['Product']['strid_' . $lang]], true),
-					'changefreq' => 'daily',
-					'lastmod'=> date('c', time()),
-					'priority'=>'0.9',
-				];
-
-				if ($this->output_related_langs) {
-					$related_langs = array_intersect($this->relatedLangs($lang), $v['Product']['translated']);
-					if ($related_langs) {
-						$url['xhtml:link'] = [];
-						foreach ($related_langs as $related_lang) {
-							$url['xhtml:link'][] = [
-								'@rel' => 'alternate',
-								'@hreflang' => $related_lang,
-								'@href' => Router::url(['lang' => $related_lang, 'controller' => 'products', 'action' => 'view', $v['Product']['strid_' . $related_lang]], true)
-							];
-						}
-					}
-				}
-
-				$urls[] = $url;
-			}
+		if (in_array("en", $this->langs)) {
+			$la = 'en';
+		} elseif (in_array("lv", $this->langs)) {
+			$la = 'lv';
+		} elseif (in_array("ru", $this->langs)) {
+			$la = 'ru';
+		} elseif (in_array("es", $this->langs)) {
+			$la = 'es';
+		} else {
+			$la = 'de';
 		}
 
+			$url = [
+				'loc' => Router::url(['lang' => $la, 'controller' => 'products', 'action' => 'view', $v['Product']['strid_' . $la]], true),
+				'changefreq' => 'daily',
+				'lastmod'=> date('c', time()),
+				'priority'=>'0.9',
+			];
+
+			$url['xhtml:link'] = [];
+			foreach ($langs as $lang) {
+				if ($lang != $la) {
+					$url['xhtml:link'][] = [
+						'@rel' => 'alternate',
+						'@hreflang' => $lang,
+						'@href' => Router::url(['lang' => $lang, 'controller' => 'products', 'action' => 'view', $v['Product']['strid_' . $lang]], true)
+					];
+				}
+			}
+			$urls[] = $url;
+			}
 		return $urls;
 	}
 
@@ -529,34 +656,37 @@ class SitemapController extends AppController
 		foreach ($data as $v) {
 			$langs = array_intersect($this->langs, $v['Service']['translated']);
 
-
-			foreach ($langs as $lang) {
-				$url = [
-					'loc' => Router::url(['lang' => $lang, 'controller' => 'services', 'action' => 'view', $v['Service']['strid_' . $lang]], true),
-					'changefreq' => 'daily',
-					'lastmod'=> date('c', time()),
-					'priority'=>'0.9',
-				];
-
-				if ($this->output_related_langs) {
-
-					$related_langs = array_intersect($this->relatedLangs($lang), $v['Service']['translated']);
-					if ($related_langs) {
-						$url['xhtml:link'] = [];
-						foreach ($related_langs as $related_lang) {
-							$url['xhtml:link'][] = [
-								'@rel' => 'alternate',
-								'@hreflang' => $related_lang,
-								'@href' => Router::url(['lang' => $related_lang, 'controller' => 'services', 'action' => 'view', $v['Service']['strid_' . $related_lang]], true)
-							];
-						}
-					}
-				}
-
-				$urls[] = $url;
-			}
+		if (in_array("en", $this->langs)) {
+			$la = 'en';
+		} elseif (in_array("lv", $this->langs)) {
+			$la = 'lv';
+		} elseif (in_array("ru", $this->langs)) {
+			$la = 'ru';
+		} elseif (in_array("es", $this->langs)) {
+			$la = 'es';
+		} else {
+			$la = 'de';
 		}
 
+			$url = [
+				'loc' => Router::url(['lang' => $la, 'controller' => 'services', 'action' => 'view', $v['Service']['strid_' . $la]], true),
+				'changefreq' => 'daily',
+				'lastmod'=> date('c', time()),
+				'priority'=>'0.9',
+			];
+
+			$url['xhtml:link'] = [];
+			foreach ($langs as $lang) {
+				if ($lang != $la) {
+					$url['xhtml:link'][] = [
+						'@rel' => 'alternate',
+						'@hreflang' => $lang,
+						'@href' => Router::url(['lang' => $lang, 'controller' => 'services', 'action' => 'view', $v['Service']['strid_' . $lang]], true)
+					];
+				}
+			}
+			$urls[] = $url;
+		}
 		return $urls;
 	}
 
@@ -575,34 +705,37 @@ class SitemapController extends AppController
 		foreach ($data as $v) {
 			$langs = array_intersect($this->langs, $v['Article']['translated']);
 
-
-			foreach ($langs as $lang) {
-				$url = [
-					'loc' => Router::url(['lang' => $lang, 'controller' => 'articles', 'action' => 'view', $v['Article']['strid_' . $lang]], true),
-					'changefreq' => 'daily',
-					'lastmod'=> date('c', time()),
-					'priority'=>'0.9',
-				];
-
-				if ($this->output_related_langs) {
-
-					$related_langs = array_intersect($this->relatedLangs($lang), $v['Article']['translated']);
-					if ($related_langs) {
-						$url['xhtml:link'] = [];
-						foreach ($related_langs as $related_lang) {
-							$url['xhtml:link'][] = [
-								'@rel' => 'alternate',
-								'@hreflang' => $related_lang,
-								'@href' => Router::url(['lang' => $related_lang, 'controller' => 'articles', 'action' => 'view', $v['Article']['strid_' . $related_lang]], true)
-							];
-						}
-					}
-				}
-
-				$urls[] = $url;
-			}
+		if (in_array("en", $this->langs)) {
+			$la = 'en';
+		} elseif (in_array("lv", $this->langs)) {
+			$la = 'lv';
+		} elseif (in_array("ru", $this->langs)) {
+			$la = 'ru';
+		} elseif (in_array("es", $this->langs)) {
+			$la = 'es';
+		} else {
+			$la = 'de';
 		}
 
+			$url = [
+				'loc' => Router::url(['lang' => $la, 'controller' => 'articles', 'action' => 'view', $v['Article']['strid_' . $la]], true),
+				'changefreq' => 'daily',
+				'lastmod'=> date('c', time()),
+				'priority'=>'0.9',
+			];
+
+			$url['xhtml:link'] = [];
+			foreach ($langs as $lang) {
+				if ($lang != $la) {
+					$url['xhtml:link'][] = [
+						'@rel' => 'alternate',
+						'@hreflang' => $lang,
+						'@href' => Router::url(['lang' => $lang, 'controller' => 'articles', 'action' => 'view', $v['Article']['strid_' . $lang]], true)
+					];
+				}
+			}
+			$urls[] = $url;
+			}
 		return $urls;
 	}
 
@@ -620,32 +753,37 @@ class SitemapController extends AppController
 
 		foreach ($data as $v) {
 			$langs = array_intersect($this->langs, $v['Portfolio']['translated']);
+			
+		if (in_array("en", $this->langs)) {
+			$la = 'en';
+		} elseif (in_array("lv", $this->langs)) {
+			$la = 'lv';
+		} elseif (in_array("ru", $this->langs)) {
+			$la = 'ru';
+		} elseif (in_array("es", $this->langs)) {
+			$la = 'es';
+		} else {
+			$la = 'de';
+		}
 
+			$url = [
+				'loc' => Router::url(['lang' => $la, 'controller' => 'portfolio', 'action' => 'view', $v['Portfolio']['strid_' . $la]], true),
+				'changefreq' => 'daily',
+				'lastmod'=> date('c', time()),
+				'priority'=>'0.9',
+			];
+
+			$url['xhtml:link'] = [];
 			foreach ($langs as $lang) {
-				$url = [
-					'loc' => Router::url(['lang' => $lang, 'controller' => 'portfolio', 'action' => 'view', $v['Portfolio']['strid_' . $lang]], true),
-					'changefreq' => 'daily',
-					'lastmod'=> date('c', time()),
-					'priority'=>'0.9',
-				];
-
-				if ($this->output_related_langs) {
-
-					$related_langs = array_intersect($this->relatedLangs($lang), $v['Portfolio']['translated']);
-					if ($related_langs) {
-						$url['xhtml:link'] = [];
-						foreach ($related_langs as $related_lang) {
-							$url['xhtml:link'][] = [
-								'@rel' => 'alternate',
-								'@hreflang' => $related_lang,
-								'@href' => Router::url(['lang' => $related_lang, 'controller' => 'portfolio', 'action' => 'view', $v['Portfolio']['strid_' . $related_lang]], true)
-							];
-						}
-					}
+				if ($lang != $la) {
+					$url['xhtml:link'][] = [
+						'@rel' => 'alternate',
+						'@hreflang' => $lang,
+						'@href' => Router::url(['lang' => $lang, 'controller' => 'portfolio', 'action' => 'view', $v['Portfolio']['strid_' . $lang]], true)
+					];
 				}
-
-				$urls[] = $url;
 			}
+			$urls[] = $url;
 		}
 		return $urls;
 	}

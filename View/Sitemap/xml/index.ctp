@@ -1,30 +1,25 @@
-<?php
+<?xml version="1.0" encoding="UTF-8"?>
+		
+	<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+	
+	<sitemap>
+			<loc><?php echo Router::url('/', true) ?>webroot/sitemap-index.xml</loc>
+			<lastmod><?php echo date('Y-m-d',time()) ?></lastmod>
+	</sitemap>
 
-$xmlArray = Xml::fromArray($sitemap);
-$xmlImagesArray = Xml::fromArray($sitemapimages);
-
-echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" 
-    xmlns:image= "http://www.google.com/schemas/sitemap-image/1.1">';
-
-foreach ($xmlArray->url as $url) {
-    echo '<url>';
-    echo '<loc>' . htmlspecialchars($url->loc) . '</loc>';
-    echo '<lastmod>' . date("d-m-Y h:i:s", strtotime($url->lastmod)) . '</lastmod>';
-    echo '<changefreq>' . htmlspecialchars($url->changefreq) . '</changefreq>';
-    echo '<priority>' . $url->priority . '</priority>';
-    echo '</url>';
-}
-
-foreach ($xmlImagesArray->url as $image_url) {
-    echo '<url>';
-    echo '<loc>' . $image_url->href . '</loc>';  
-    foreach ($image_url->images as $img) {     
-    echo '<image:image>';
-    echo '<image:loc>'.$img.'</image:loc>';
-    echo '</image:image>';
-    }
-    echo '</url>';
-}
-
-echo '</urlset>';
-?>
+	<sitemap>
+			<loc><?php echo Router::url('/', true) ?>webroot/sitemap-general.xml</loc>
+			<lastmod><?php echo date('Y-m-d',time()) ?></lastmod>
+	</sitemap>
+	
+	<sitemap>
+			<loc><?php echo Router::url('/', true) ?>webroot/sitemap-images.xml</loc>
+			<lastmod><?php echo date('Y-m-d',time()) ?></lastmod>
+	</sitemap>
+	
+	<sitemap>
+			<loc><?php echo Router::url('/', true) ?>webroot/sitemap-posts.xml</loc>
+			<lastmod><?php echo date('Y-m-d',time()) ?></lastmod>
+	</sitemap>
+	
+	</sitemapindex>
