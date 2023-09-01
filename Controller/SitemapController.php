@@ -48,32 +48,6 @@ class SitemapController extends AppController
 		// $urls = array_merge($urls, $this->servicesUrls());
 		// $urls = array_merge($urls, $this->articlesUrls());
 		$urls = array_merge($urls, $this->portfoliosUrls());
-
-		$timex = date('Y-m-d',time());
-		$filename = $_SERVER['DOCUMENT_ROOT']."/sitemap-index.xml";
-
-				
-		$data = '<?xml version="1.0" encoding="UTF-8"?>
-		
-			<sitemapindex xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">
-			
-			<sitemap>
-					<loc>'.Router::url('/', true).'/sitemap-general.xml</loc>
-					<lastmod>'.$timex.'</lastmod>
-			</sitemap>
-			
-			<sitemap>
-					<loc>'.Router::url('/', true).'/sitemap-images.xml</loc>
-					<lastmod>'.$timex.'</lastmod>
-			</sitemap>
-			
-			<sitemap>
-					<loc>'.Router::url('/', true).'/sitemap-posts.xml</loc>
-					<lastmod>'.$timex.'</lastmod>
-			</sitemap>
-			
-			</sitemapindex>';
-		 file_put_contents($filename, $data);
 			
 		// general urls
 		$html_gen = '<?xml version="1.0" encoding="UTF-8"?>';
@@ -395,6 +369,10 @@ class SitemapController extends AppController
 	 */
 	private function moduleUrls(string $controller): array {
 		$urls = [];
+
+		if ($controller == 'article') {
+			$controller = 'blog';
+		}
 
 		if (in_array("en", $this->langs)) {
 			$la = 'en';
