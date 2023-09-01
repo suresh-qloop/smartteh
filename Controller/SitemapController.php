@@ -38,58 +38,48 @@ class SitemapController extends AppController
 		$urls = array_merge($urls, $this->moduleUrls('start'));
 		$urls = array_merge($urls, $this->moduleUrls('industries'));
 		$urls = array_merge($urls, $this->moduleUrls('categories'));
-		$urls = array_merge($urls, $this->moduleUrls('services'));
+		// $urls = array_merge($urls, $this->moduleUrls('services'));
 		$urls = array_merge($urls, $this->moduleUrls('article'));
 		$urls = array_merge($urls, $this->moduleUrls('portfolio'));
 		$urls = array_merge($urls, $this->sectionUrls());
 		$urls = array_merge($urls, $this->categoriesUrls());
 		$urls = array_merge($urls, $this->industriesUrls());
 		$urls = array_merge($urls, $this->productsUrls());
-		$urls = array_merge($urls, $this->servicesUrls());
+		// $urls = array_merge($urls, $this->servicesUrls());
 		// $urls = array_merge($urls, $this->articlesUrls());
 		$urls = array_merge($urls, $this->portfoliosUrls());
 
 		$timex = date('Y-m-d',time());
-		$filename = $_SERVER['DOCUMENT_ROOT']."/smartteh/webroot/sitemap-index.xml";
+		$filename = $_SERVER['DOCUMENT_ROOT']."/sitemap-index.xml";
 
-		if (file_exists($filename)) {
-  
-		} else {
-			
-		$dataa = '<?xml version="1.0" encoding="UTF-8"?>
+				
+		$data = '<?xml version="1.0" encoding="UTF-8"?>
 		
 			<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 			
 			<sitemap>
-					<loc>'.Router::url('/', true).'/webroot/sitemap-index.xml</loc>
-					<lastmod>'.$timex.'</lastmod>
-			</sitemap>
-
-			<sitemap>
-					<loc>'.Router::url('/', true).'/webroot/sitemap-general.xml</loc>
+					<loc>' . Router::url('/', true) . '/sitemap-general.xml</loc>
 					<lastmod>'.$timex.'</lastmod>
 			</sitemap>
 			
 			<sitemap>
-					<loc>'.Router::url('/', true).'/webroot/sitemap-images.xml</loc>
+					<loc>' . Router::url('/', true).'/sitemap-images.xml</loc>
 					<lastmod>'.$timex.'</lastmod>
 			</sitemap>
 			
 			<sitemap>
-					<loc>'.Router::url('/', true).'/webroot/sitemap-posts.xml</loc>
+					<loc>' . Router::url('/', true) . '/sitemap-posts.xml</loc>
 					<lastmod>'.$timex.'</lastmod>
 			</sitemap>
 			
 			</sitemapindex>';
-		 file_put_contents($filename, $dataa);
+		 file_put_contents($filename, $data);
 			
-		}
-
 		// general urls
 		$html_gen = '<?xml version="1.0" encoding="UTF-8"?>';
 		$html_gen .= '
-		<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-			xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:hreflang="http://www.w3.org/1999/xhtml/rel">';
+		<urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9"
+			xmlns:xhtml="https://www.w3.org/1999/xhtml" xmlns:hreflang="https://www.w3.org/1999/xhtml/rel">';
 
 		foreach ($urls as $url) {
 
@@ -102,15 +92,13 @@ class SitemapController extends AppController
 		}
 		$html_gen .='
 					<lastmod>'.date("d-m-Y h:i:s", strtotime($url['lastmod'])).'</lastmod>
-					<changefreq>'.htmlspecialchars($url['changefreq']).'</changefreq>
-					<priority>'.$url['priority'].'</priority>
 				</url>';
 		}
 
 		$html_gen .= '
 		</urlset>';
 
-		file_put_contents( $_SERVER['DOCUMENT_ROOT']."/smartteh/webroot/sitemap-general.xml", $html_gen);
+		file_put_contents( $_SERVER['DOCUMENT_ROOT']."/sitemap-general.xml", $html_gen);
 
 		// images urls
 		$image_urls = [];
@@ -122,8 +110,8 @@ class SitemapController extends AppController
 
 		$html_image = '<?xml version="1.0" encoding="UTF-8"?>';
 		$html_image .= '
-		<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-			xmlns:image= "http://www.google.com/schemas/sitemap-image/1.1">';
+		<urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9"
+			xmlns:image= "https://www.google.com/schemas/sitemap-image/1.1">';
 
 		foreach ($image_urls as $image_url) {
 
@@ -143,7 +131,7 @@ class SitemapController extends AppController
 		$html_image .= '
 		</urlset>';
 
-		file_put_contents( $_SERVER['DOCUMENT_ROOT']."/smartteh/webroot/sitemap-images.xml", $html_image);
+		file_put_contents( $_SERVER['DOCUMENT_ROOT']."/sitemap-images.xml", $html_image);
 
 		// post or articals urls
 		$post_urls = [];
@@ -151,8 +139,8 @@ class SitemapController extends AppController
 
 		$html_post = '<?xml version="1.0" encoding="UTF-8"?>';
 		$html_post .= '
-		<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-			xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:hreflang="http://www.w3.org/1999/xhtml/rel">';
+		<urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9"
+			xmlns:xhtml="https://www.w3.org/1999/xhtml" xmlns:hreflang="https://www.w3.org/1999/xhtml/rel">';
 
 		foreach ($post_urls as $url) {
 
@@ -165,15 +153,13 @@ class SitemapController extends AppController
 		}
 		$html_post .='
 					<lastmod>'.date("d-m-Y h:i:s", strtotime($url['lastmod'])).'</lastmod>
-					<changefreq>'.htmlspecialchars($url['changefreq']).'</changefreq>
-					<priority>'.$url['priority'].'</priority>
 				</url>';
 		}
 
 		$html_post .= '
 		</urlset>';
 
-		file_put_contents( $_SERVER['DOCUMENT_ROOT']."/smartteh/webroot/sitemap-posts.xml", $html_post);
+		file_put_contents( $_SERVER['DOCUMENT_ROOT']."/sitemap-posts.xml", $html_post);
 	}
 
 	private function productImageUrls(): array {
@@ -422,6 +408,7 @@ class SitemapController extends AppController
 		} else {
 			$la = 'de';
 		}
+
 		$url = [
 			'loc' => rtrim(Router::url(['lang' => $la, 'controller' => $controller, 'action' => 'index'], true), '/'),
 			'changefreq' => 'daily',
@@ -461,16 +448,37 @@ class SitemapController extends AppController
 		foreach ($data as $v) {
 			$langs = array_intersect($this->langs, $v['Section']['translated']);
 
-			foreach ($langs as $lang) {
-				$urls[] = [
-					'loc' => Router::url(['lang' => $lang, 'controller' => 'sections', 'action' => 'view', $v['Section']['strid_' . $lang]], true),
-					'changefreq' => 'daily',
-					'lastmod'=> date('c', time()),
-					'priority'=>'0.9',
-				];
+			if (in_array("en", $langs)) {
+				$la = 'en';
+			} elseif (in_array("lv", $langs)) {
+				$la = 'lv';
+			} elseif (in_array("ru", $langs)) {
+				$la = 'ru';
+			} elseif (in_array("es", $langs)) {
+				$la = 'es';
+			} else {
+				$la = 'de';
 			}
-		}
 
+			$url = [
+				'loc' => Router::url(['lang' => $la, 'controller' => 'sections', 'action' => 'view', $v['Section']['strid_' . $la]], true),
+				'changefreq' => 'daily',
+				'lastmod'=> date('c', time()),
+				'priority'=>'0.9',
+			];
+
+			$url['xhtml:link'] = [];
+			foreach ($langs as $lang) {
+				if ($lang != $la) {
+					$url['xhtml:link'][] = [
+						'@rel' => 'alternate',
+						'@hreflang' => $lang,
+						'@href' => Router::url(['lang' => $lang, 'controller' => 'sections', 'action' => 'view', $v['Section']['strid_' . $lang]], true)
+					];
+				}
+			}
+			$urls[] = $url;
+		}
 		return $urls;
 	}
 
@@ -493,13 +501,13 @@ class SitemapController extends AppController
 		foreach ($data as $v) {
 			$langs = array_intersect($this->langs, $v['Category']['translated']);
 
-			if (in_array("en", $this->langs)) {
+		if (in_array("en", $langs)) {
 			$la = 'en';
-		} elseif (in_array("lv", $this->langs)) {
+		} elseif (in_array("lv", $langs)) {
 			$la = 'lv';
-		} elseif (in_array("ru", $this->langs)) {
+		} elseif (in_array("ru", $langs)) {
 			$la = 'ru';
-		} elseif (in_array("es", $this->langs)) {
+		} elseif (in_array("es", $langs)) {
 			$la = 'es';
 		} else {
 			$la = 'de';
@@ -552,13 +560,13 @@ class SitemapController extends AppController
 		foreach ($data as $v) {
 			$langs = array_intersect($this->langs, $v['Industry']['translated']);
 
-		if (in_array("en", $this->langs)) {
+		if (in_array("en", $langs)) {
 			$la = 'en';
-		} elseif (in_array("lv", $this->langs)) {
+		} elseif (in_array("lv", $langs)) {
 			$la = 'lv';
-		} elseif (in_array("ru", $this->langs)) {
+		} elseif (in_array("ru", $langs)) {
 			$la = 'ru';
-		} elseif (in_array("es", $this->langs)) {
+		} elseif (in_array("es", $langs)) {
 			$la = 'es';
 		} else {
 			$la = 'de';
@@ -606,13 +614,13 @@ class SitemapController extends AppController
 		foreach ($data as $v) {
 			$langs = array_intersect($this->langs, $v['Product']['translated']);
 
-		if (in_array("en", $this->langs)) {
+		if (in_array("en", $langs)) {
 			$la = 'en';
-		} elseif (in_array("lv", $this->langs)) {
+		} elseif (in_array("lv", $langs)) {
 			$la = 'lv';
-		} elseif (in_array("ru", $this->langs)) {
+		} elseif (in_array("ru", $langs)) {
 			$la = 'ru';
-		} elseif (in_array("es", $this->langs)) {
+		} elseif (in_array("es", $langs)) {
 			$la = 'es';
 		} else {
 			$la = 'de';
@@ -656,13 +664,13 @@ class SitemapController extends AppController
 		foreach ($data as $v) {
 			$langs = array_intersect($this->langs, $v['Service']['translated']);
 
-		if (in_array("en", $this->langs)) {
+		if (in_array("en", $langs)) {
 			$la = 'en';
-		} elseif (in_array("lv", $this->langs)) {
+		} elseif (in_array("lv", $langs)) {
 			$la = 'lv';
-		} elseif (in_array("ru", $this->langs)) {
+		} elseif (in_array("ru", $langs)) {
 			$la = 'ru';
-		} elseif (in_array("es", $this->langs)) {
+		} elseif (in_array("es", $langs)) {
 			$la = 'es';
 		} else {
 			$la = 'de';
@@ -705,13 +713,13 @@ class SitemapController extends AppController
 		foreach ($data as $v) {
 			$langs = array_intersect($this->langs, $v['Article']['translated']);
 
-		if (in_array("en", $this->langs)) {
+		if (in_array("en", $langs)) {
 			$la = 'en';
-		} elseif (in_array("lv", $this->langs)) {
+		} elseif (in_array("lv", $langs)) {
 			$la = 'lv';
-		} elseif (in_array("ru", $this->langs)) {
+		} elseif (in_array("ru", $langs)) {
 			$la = 'ru';
-		} elseif (in_array("es", $this->langs)) {
+		} elseif (in_array("es", $langs)) {
 			$la = 'es';
 		} else {
 			$la = 'de';
