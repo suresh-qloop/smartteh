@@ -55,20 +55,20 @@ class SitemapController extends AppController
 				
 		$data = '<?xml version="1.0" encoding="UTF-8"?>
 		
-			<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+			<sitemapindex xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">
 			
 			<sitemap>
-					<loc>' . Router::url('/', true) . '/sitemap-general.xml</loc>
+					<loc>'.Router::url('/', true).'/sitemap-general.xml</loc>
 					<lastmod>'.$timex.'</lastmod>
 			</sitemap>
 			
 			<sitemap>
-					<loc>' . Router::url('/', true).'/sitemap-images.xml</loc>
+					<loc>'.Router::url('/', true).'/sitemap-images.xml</loc>
 					<lastmod>'.$timex.'</lastmod>
 			</sitemap>
 			
 			<sitemap>
-					<loc>' . Router::url('/', true) . '/sitemap-posts.xml</loc>
+					<loc>'.Router::url('/', true).'/sitemap-posts.xml</loc>
 					<lastmod>'.$timex.'</lastmod>
 			</sitemap>
 			
@@ -208,7 +208,6 @@ class SitemapController extends AppController
 
 		return $image_urls;
 	}
-
 
 	private function relatedLangs(string $lang): array {
 		return array_filter($this->langs, static function ($this_lang) use ($lang) {
@@ -418,13 +417,11 @@ class SitemapController extends AppController
 
 		$url['xhtml:link'] = [];
 		foreach ($this->langs as $lang) {
-			if ($lang != $la) {
-				$url['xhtml:link'][] = [
-					'@rel' => 'alternate',
-					'@hreflang' => $lang,
-					'@href' => Router::url(['lang' => $lang, 'controller' => $controller, 'action' => 'index'], true)
-				];
-			}
+			$url['xhtml:link'][] = [
+				'@rel' => 'alternate',
+				'@hreflang' => $lang,
+				'@href' => Router::url(['lang' => $lang, 'controller' => $controller, 'action' => 'index'], true)
+			];
 		}
 		$urls[] = $url;		
 		return $urls;	
@@ -469,13 +466,11 @@ class SitemapController extends AppController
 
 			$url['xhtml:link'] = [];
 			foreach ($langs as $lang) {
-				if ($lang != $la) {
-					$url['xhtml:link'][] = [
-						'@rel' => 'alternate',
-						'@hreflang' => $lang,
-						'@href' => Router::url(['lang' => $lang, 'controller' => 'sections', 'action' => 'view', $v['Section']['strid_' . $lang]], true)
-					];
-				}
+				$url['xhtml:link'][] = [
+					'@rel' => 'alternate',
+					'@hreflang' => $lang,
+					'@href' => Router::url(['lang' => $lang, 'controller' => 'sections', 'action' => 'view', $v['Section']['strid_' . $lang]], true)
+				];
 			}
 			$urls[] = $url;
 		}
@@ -501,17 +496,17 @@ class SitemapController extends AppController
 		foreach ($data as $v) {
 			$langs = array_intersect($this->langs, $v['Category']['translated']);
 
-		if (in_array("en", $langs)) {
-			$la = 'en';
-		} elseif (in_array("lv", $langs)) {
-			$la = 'lv';
-		} elseif (in_array("ru", $langs)) {
-			$la = 'ru';
-		} elseif (in_array("es", $langs)) {
-			$la = 'es';
-		} else {
-			$la = 'de';
-		}
+			if (in_array("en", $langs)) {
+				$la = 'en';
+			} elseif (in_array("lv", $langs)) {
+				$la = 'lv';
+			} elseif (in_array("ru", $langs)) {
+				$la = 'ru';
+			} elseif (in_array("es", $langs)) {
+				$la = 'es';
+			} else {
+				$la = 'de';
+			}
 
 			$url = [
 				'loc' => Router::url(['lang' => $la, 'controller' => 'categories', 'action' => 'view', $v['Category']['strid_'.$la]], true),
@@ -522,13 +517,11 @@ class SitemapController extends AppController
 
 			$url['xhtml:link'] = [];
 			foreach ($langs as $lang) {
-				if ($lang != $la) {
-					$url['xhtml:link'][] = [
-						'@rel' => 'alternate',
-						'@hreflang' => $lang,
-						'@href' => Router::url(['lang' => $lang, 'controller' => 'categories', 'action' => 'view', $v['Category']['strid_' . $lang]], true)
-					];
-				}
+				$url['xhtml:link'][] = [
+					'@rel' => 'alternate',
+					'@hreflang' => $lang,
+					'@href' => Router::url(['lang' => $lang, 'controller' => 'categories', 'action' => 'view', $v['Category']['strid_' . $lang]], true)
+				];
 			}
 			$urls[] = $url;
 		}
@@ -560,17 +553,17 @@ class SitemapController extends AppController
 		foreach ($data as $v) {
 			$langs = array_intersect($this->langs, $v['Industry']['translated']);
 
-		if (in_array("en", $langs)) {
-			$la = 'en';
-		} elseif (in_array("lv", $langs)) {
-			$la = 'lv';
-		} elseif (in_array("ru", $langs)) {
-			$la = 'ru';
-		} elseif (in_array("es", $langs)) {
-			$la = 'es';
-		} else {
-			$la = 'de';
-		}
+			if (in_array("en", $langs)) {
+				$la = 'en';
+			} elseif (in_array("lv", $langs)) {
+				$la = 'lv';
+			} elseif (in_array("ru", $langs)) {
+				$la = 'ru';
+			} elseif (in_array("es", $langs)) {
+				$la = 'es';
+			} else {
+				$la = 'de';
+			}
 
 			$url = [
 				'loc' => Router::url(['lang' => $la, 'controller' => 'industries', 'action' => 'view', $v['Industry']['strid_' . $la]], true),
@@ -581,13 +574,11 @@ class SitemapController extends AppController
 
 			$url['xhtml:link'] = [];
 			foreach ($langs as $lang) {
-				if ($lang != $la) {
-					$url['xhtml:link'][] = [
-						'@rel' => 'alternate',
-						'@hreflang' => $lang,
-						'@href' => Router::url(['lang' => $lang, 'controller' => 'industries', 'action' => 'view', $v['Industry']['strid_' . $lang]], true)
-					];
-				}
+				$url['xhtml:link'][] = [
+					'@rel' => 'alternate',
+					'@hreflang' => $lang,
+					'@href' => Router::url(['lang' => $lang, 'controller' => 'industries', 'action' => 'view', $v['Industry']['strid_' . $lang]], true)
+				];
 			}
 			$urls[] = $url;
 		}
@@ -614,17 +605,17 @@ class SitemapController extends AppController
 		foreach ($data as $v) {
 			$langs = array_intersect($this->langs, $v['Product']['translated']);
 
-		if (in_array("en", $langs)) {
-			$la = 'en';
-		} elseif (in_array("lv", $langs)) {
-			$la = 'lv';
-		} elseif (in_array("ru", $langs)) {
-			$la = 'ru';
-		} elseif (in_array("es", $langs)) {
-			$la = 'es';
-		} else {
-			$la = 'de';
-		}
+			if (in_array("en", $langs)) {
+				$la = 'en';
+			} elseif (in_array("lv", $langs)) {
+				$la = 'lv';
+			} elseif (in_array("ru", $langs)) {
+				$la = 'ru';
+			} elseif (in_array("es", $langs)) {
+				$la = 'es';
+			} else {
+				$la = 'de';
+			}
 
 			$url = [
 				'loc' => Router::url(['lang' => $la, 'controller' => 'products', 'action' => 'view', $v['Product']['strid_' . $la]], true),
@@ -635,16 +626,14 @@ class SitemapController extends AppController
 
 			$url['xhtml:link'] = [];
 			foreach ($langs as $lang) {
-				if ($lang != $la) {
-					$url['xhtml:link'][] = [
-						'@rel' => 'alternate',
-						'@hreflang' => $lang,
-						'@href' => Router::url(['lang' => $lang, 'controller' => 'products', 'action' => 'view', $v['Product']['strid_' . $lang]], true)
-					];
-				}
+				$url['xhtml:link'][] = [
+					'@rel' => 'alternate',
+					'@hreflang' => $lang,
+					'@href' => Router::url(['lang' => $lang, 'controller' => 'products', 'action' => 'view', $v['Product']['strid_' . $lang]], true)
+				];
 			}
 			$urls[] = $url;
-			}
+		}
 		return $urls;
 	}
 
@@ -664,17 +653,17 @@ class SitemapController extends AppController
 		foreach ($data as $v) {
 			$langs = array_intersect($this->langs, $v['Service']['translated']);
 
-		if (in_array("en", $langs)) {
-			$la = 'en';
-		} elseif (in_array("lv", $langs)) {
-			$la = 'lv';
-		} elseif (in_array("ru", $langs)) {
-			$la = 'ru';
-		} elseif (in_array("es", $langs)) {
-			$la = 'es';
-		} else {
-			$la = 'de';
-		}
+			if (in_array("en", $langs)) {
+				$la = 'en';
+			} elseif (in_array("lv", $langs)) {
+				$la = 'lv';
+			} elseif (in_array("ru", $langs)) {
+				$la = 'ru';
+			} elseif (in_array("es", $langs)) {
+				$la = 'es';
+			} else {
+				$la = 'de';
+			}
 
 			$url = [
 				'loc' => Router::url(['lang' => $la, 'controller' => 'services', 'action' => 'view', $v['Service']['strid_' . $la]], true),
@@ -685,13 +674,11 @@ class SitemapController extends AppController
 
 			$url['xhtml:link'] = [];
 			foreach ($langs as $lang) {
-				if ($lang != $la) {
-					$url['xhtml:link'][] = [
-						'@rel' => 'alternate',
-						'@hreflang' => $lang,
-						'@href' => Router::url(['lang' => $lang, 'controller' => 'services', 'action' => 'view', $v['Service']['strid_' . $lang]], true)
-					];
-				}
+				$url['xhtml:link'][] = [
+					'@rel' => 'alternate',
+					'@hreflang' => $lang,
+					'@href' => Router::url(['lang' => $lang, 'controller' => 'services', 'action' => 'view', $v['Service']['strid_' . $lang]], true)
+				];
 			}
 			$urls[] = $url;
 		}
@@ -713,17 +700,17 @@ class SitemapController extends AppController
 		foreach ($data as $v) {
 			$langs = array_intersect($this->langs, $v['Article']['translated']);
 
-		if (in_array("en", $langs)) {
-			$la = 'en';
-		} elseif (in_array("lv", $langs)) {
-			$la = 'lv';
-		} elseif (in_array("ru", $langs)) {
-			$la = 'ru';
-		} elseif (in_array("es", $langs)) {
-			$la = 'es';
-		} else {
-			$la = 'de';
-		}
+			if (in_array("en", $langs)) {
+				$la = 'en';
+			} elseif (in_array("lv", $langs)) {
+				$la = 'lv';
+			} elseif (in_array("ru", $langs)) {
+				$la = 'ru';
+			} elseif (in_array("es", $langs)) {
+				$la = 'es';
+			} else {
+				$la = 'de';
+			}
 
 			$url = [
 				'loc' => Router::url(['lang' => $la, 'controller' => 'articles', 'action' => 'view', $v['Article']['strid_' . $la]], true),
@@ -734,16 +721,14 @@ class SitemapController extends AppController
 
 			$url['xhtml:link'] = [];
 			foreach ($langs as $lang) {
-				if ($lang != $la) {
-					$url['xhtml:link'][] = [
-						'@rel' => 'alternate',
-						'@hreflang' => $lang,
-						'@href' => Router::url(['lang' => $lang, 'controller' => 'articles', 'action' => 'view', $v['Article']['strid_' . $lang]], true)
-					];
-				}
+				$url['xhtml:link'][] = [
+					'@rel' => 'alternate',
+					'@hreflang' => $lang,
+					'@href' => Router::url(['lang' => $lang, 'controller' => 'articles', 'action' => 'view', $v['Article']['strid_' . $lang]], true)
+				];
 			}
 			$urls[] = $url;
-			}
+		}
 		return $urls;
 	}
 
@@ -762,17 +747,17 @@ class SitemapController extends AppController
 		foreach ($data as $v) {
 			$langs = array_intersect($this->langs, $v['Portfolio']['translated']);
 			
-		if (in_array("en", $this->langs)) {
-			$la = 'en';
-		} elseif (in_array("lv", $this->langs)) {
-			$la = 'lv';
-		} elseif (in_array("ru", $this->langs)) {
-			$la = 'ru';
-		} elseif (in_array("es", $this->langs)) {
-			$la = 'es';
-		} else {
-			$la = 'de';
-		}
+			if (in_array("en", $this->langs)) {
+				$la = 'en';
+			} elseif (in_array("lv", $this->langs)) {
+				$la = 'lv';
+			} elseif (in_array("ru", $this->langs)) {
+				$la = 'ru';
+			} elseif (in_array("es", $this->langs)) {
+				$la = 'es';
+			} else {
+				$la = 'de';
+			}
 
 			$url = [
 				'loc' => Router::url(['lang' => $la, 'controller' => 'portfolio', 'action' => 'view', $v['Portfolio']['strid_' . $la]], true),
@@ -783,13 +768,11 @@ class SitemapController extends AppController
 
 			$url['xhtml:link'] = [];
 			foreach ($langs as $lang) {
-				if ($lang != $la) {
-					$url['xhtml:link'][] = [
-						'@rel' => 'alternate',
-						'@hreflang' => $lang,
-						'@href' => Router::url(['lang' => $lang, 'controller' => 'portfolio', 'action' => 'view', $v['Portfolio']['strid_' . $lang]], true)
-					];
-				}
+				$url['xhtml:link'][] = [
+					'@rel' => 'alternate',
+					'@hreflang' => $lang,
+					'@href' => Router::url(['lang' => $lang, 'controller' => 'portfolio', 'action' => 'view', $v['Portfolio']['strid_' . $lang]], true)
+				];
 			}
 			$urls[] = $url;
 		}
