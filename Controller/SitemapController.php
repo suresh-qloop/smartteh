@@ -672,6 +672,7 @@ class SitemapController extends AppController
 		$fields[] = 'translated';
 
 		$data = $this->Article->find('all', [
+			'conditions' => ['enabled' => 1],
 			'fields' => $fields
 		]);
 
@@ -719,6 +720,7 @@ class SitemapController extends AppController
 		$fields[] = 'translated';
 
 		$data = $this->Portfolio->find('all', [
+			'conditions' => ['enabled' => 1],
 			'fields' => $fields
 		]);
 
