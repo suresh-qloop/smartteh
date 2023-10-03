@@ -26,7 +26,7 @@ class CallbacksController extends AppController
 			'conditions' => ['request_hash' => $this->request->data('Callbacks.request_hash')]
 		]);
 
-		$pipedrive = new Pipedrive('f684ad1188711003260aa0c2a763a83616057be4');
+		$pipedrive = new Pipedrive(PIPEDRIVE_KEY);
 
 		$response = $pipedrive->deals->add([
 			'title' => $this->request->data('Callbacks.name'), // Deal title

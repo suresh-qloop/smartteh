@@ -169,3 +169,5 @@ Inflector::rules('transliteration', [
 	'/€/' => 'eur',
 	'/&/' => 'and'
 ]);
+
+define('PIPEDRIVE_KEY', 'f684ad1188711003260aa0c2a763a83616057be4');

@@ -30,7 +30,7 @@ class ContactsController extends AppController
 			'conditions' => ['request_hash' => $this->request->data('Contacts.request_hash')]
 		]);
 
-		$pipedrive = new Pipedrive('f684ad1188711003260aa0c2a763a83616057be4');
+		$pipedrive = new Pipedrive(PIPEDRIVE_KEY);
 
 		$response = $pipedrive->persons->add([
 			'name' => $this->request->data('Contacts.name'),
