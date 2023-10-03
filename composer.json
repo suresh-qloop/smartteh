@@ -15,7 +15,8 @@
 		"guzzlehttp/guzzle": "^7.4",
 		"cakedc/migrations": "^2.6",
 		"sentry/sdk": "^3.1",
-		"ext-mbstring": "*"
+		"ext-mbstring": "*",
+		"devio/pipedrive": "^2.16"
 	},
 	"require-dev": {
 		"vladkens/autoprefixer": "^0.1",
@@ -40,7 +41,8 @@
 		"platform-check": false,
 		"vendor-dir": "Vendor",
 		"allow-plugins": {
-			"composer/installers": true
+			"composer/installers": true,
+			"php-http/discovery": false
 		}
 	}
 }
