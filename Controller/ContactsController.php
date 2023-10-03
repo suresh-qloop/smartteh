@@ -3,6 +3,8 @@
 App::uses('AppController', 'Controller');
 App::uses('CakeEmail', 'Network/Email');
 
+use Devio\Pipedrive\Pipedrive;
+
 /**
  * Contacts
  */
@@ -16,27 +18,40 @@ class ContactsController extends AppController
 	 * @return void
 	 */
 	public function index(): void {
+
 		if (!$this->request->is('post')) {
-			throw new BadRequestException();
+			$this->redirect(['controller' => 'start', 'action' => 'index', 'lang' => $this->lang]);
+			// throw new BadRequestException();
 		}
+		
 		$page_url = $this->request->data('Contacts.page_url');
 		unset($this->request->data['Contacts']['page_url']);
 		$existing = $this->Contacts->find('first', [
 			'conditions' => ['request_hash' => $this->request->data('Contacts.request_hash')]
 		]);
 
+		$pipedrive = new Pipedrive('f684ad1188711003260aa0c2a763a83616057be4');
+
+		$response = $pipedrive->persons->add([
+			'name' => $this->request->data('Contacts.name'),
+			'email' => $this->request->data('Contacts.email'),
+			'phone' => $this->request->data('Contacts.phone'),
+			'702166007691de829474ae68346bfb31df7368e8' => $this->request->data('Contacts.text') // message field
+		]);
+
 		if (!$existing && $this->Contacts->save($this->request->data)) {
+			
 			$this->notifyAdminViaEmail($this->Contacts->id);
 
 			if (!env('APP_DEBUG')) {
+				// $this->redirect(['controller' => 'start', 'action' => 'index', 'lang' => $this->lang]);
 				$this->Contacts->sendToAmoCrm($this->Contacts->id);
 			}
-
 			$this->set(['success' => true, 'hash' => md5(Utils::uuid4())]);
+
 		} else {
 			$this->set('error', $this->Contacts->validationErrors);
 		}
-
 		setcookie('helpbox', 'minimized', time() + 950000000); // ~ 1 year
 		unset($this->request->data);
 
@@ -77,7 +92,8 @@ class ContactsController extends AppController
 		$to = $this->Setting->getValue('contacts-email', 'value');
 
 		if (!$to) {
-			return;
+			$this->redirect(['controller' => 'start', 'action' => 'index', 'lang' => $this->lang]);
+			// return;
 		}
 
 		$data = $this->Contacts->getOrFail($id, ['Product']);

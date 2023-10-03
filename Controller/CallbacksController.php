@@ -3,6 +3,8 @@
 App::uses('AppController', 'Controller');
 App::uses('CakeEmail', 'Network/Email');
 
+use Devio\Pipedrive\Pipedrive;
+
 /**
  * Callbacks
  */
@@ -19,11 +21,24 @@ class CallbacksController extends AppController
 		if (!$this->request->is('post')) {
 			throw new BadRequestException();
 		}
+		
 		$existing = $this->Callbacks->find('first', [
 			'conditions' => ['request_hash' => $this->request->data('Callbacks.request_hash')]
 		]);
 
+		$pipedrive = new Pipedrive('f684ad1188711003260aa0c2a763a83616057be4');
+
+		$response = $pipedrive->deals->add([
+			'title' => $this->request->data('Callbacks.name'), // Deal title
+			'd70ec9ad9023ae81e7d60f7c0f7aac704d093180' => $this->request->data('Callbacks.phone'), // phone no field
+			'7d3852b061e86a3770e2eec0d3c0a4203a638436' => $this->request->data('Callbacks.question'), // question field
+			// 'value' => 0, // Phone numbers
+		]);
+
 		if (!$existing && $this->Callbacks->save($this->request->data)) {
+
+			// $this->redirect(['controller' => 'start', 'action' => 'index', 'lang' => $this->lang]);
+
 			$this->notifyAdminViaEmail($this->Callbacks->id);
 
 			if (!env('APP_DEBUG')) {
