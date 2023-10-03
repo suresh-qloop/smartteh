@@ -16,10 +16,11 @@ class PortfolioController extends AppController
 	 * @return void
 	 */
 	public function index(): void {
-
 		$data = $this->Portfolio->findAll($this, 5);
 
-		$this->set(compact('data'));
+		$urls = Sitemap::getLanguageUrls('portfolio');
+
+		$this->set(compact('data', 'urls'));
 	}
 
 	/**
@@ -28,12 +29,11 @@ class PortfolioController extends AppController
 	 * @return void
 	 */
 	public function view(string $strid): void {
-		// $this->tempRedirect($this->lang);
 		if (empty($strid)) {
 			$this->redirect(['controller' => 'portfolio', 'action' => 'index'], 301);
 		}
 
-		$this->redirectFromIdToStrid($this->Portfolio, $strid, 'strid_' . $this->lang);
+		$this->redirectFromIdToStrid($this->Portfolio, $strid, 'strid_'.$this->lang);
 
 		$data = $this->Portfolio->findByStrid($strid, $this->lang);
 
@@ -44,17 +44,15 @@ class PortfolioController extends AppController
 			foreach (array_keys($langs) as $lang) {
 				$data = $this->Portfolio->findByStrid($strid, $lang);
 				if ($data && in_array($this->lang, $data['Portfolio']['translated'], true)) {
-					$this->redirect(['action' => 'view', $data['Portfolio']['strid_' . $this->lang]]);
+					$this->redirect(['action' => 'view', $data['Portfolio']['strid_'.$this->lang]]);
 				}
 			}
 
-			$this->redirect(['controller' => 'start', 'action' => 'index', 'lang' => $this->lang]);
-			// throw new NotFoundException();
+			throw new NotFoundException();
 		}
 
-		$urls = $this->commanUrlGet($this->lang,$strid,'Portfolio','portfolio');
-
-		$this->set(compact('data','urls'));
+		$urls = Sitemap::getLanguageUrls('portfolio', $this->lang, $strid, 'Portfolio');
+		$this->set(compact('data', 'urls'));
 	}
 
 	// ~~~ Administration ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -85,7 +83,7 @@ class PortfolioController extends AppController
 			$this->request->data['Portfolio']['date'] = date('Y-m-d');
 		}
 
-		$list_industries = $this->Industry->findList('title_' . $this->lang);
+		$list_industries = $this->Industry->findList('title_'.$this->lang);
 		$this->set(compact('list_industries'));
 	}
 
@@ -108,7 +106,7 @@ class PortfolioController extends AppController
 			$this->request->data = $this->Portfolio->getOrFail($id);
 		}
 
-		$list_industries = $this->Industry->findList('title_' . $this->lang);
+		$list_industries = $this->Industry->findList('title_'.$this->lang);
 		$this->set(compact('id', 'list_industries'));
 	}
 

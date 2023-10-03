@@ -27,7 +27,7 @@ class ArticlesController extends AppController
 				foreach (array_keys($langs) as $lang) {
 					$theme = $this->Theme->findByStrid($strid, $lang);
 					if ($theme) {
-						$this->redirect(['action' => 'index', $theme['Theme']['strid_' . $this->lang]], 301);
+						$this->redirect(['action' => 'index', $theme['Theme']['strid_'.$this->lang]], 301);
 					}
 				}
 
@@ -39,10 +39,8 @@ class ArticlesController extends AppController
 
 		$data = $this->Article->findAll($this, 5, $conditions);
 		$theme_list = $this->Theme->findAllActive();
-
-		$urls = $this->commanIndexUrlGet('articles');
-		
-		$this->set(compact('data', 'theme_list', 'active','urls'));
+		$urls = Sitemap::getLanguageUrls('articles');
+		$this->set(compact('data', 'theme_list', 'active', 'urls'));
 	}
 
 	/**
@@ -51,12 +49,11 @@ class ArticlesController extends AppController
 	 * @return void
 	 */
 	public function view(string $strid = null): void {
-		// $this->tempRedirect($this->lang);
 		if (empty($strid)) {
 			$this->redirect(['controller' => 'articles', 'action' => 'index'], 301);
 		}
 
-		$this->redirectFromIdToStrid($this->Article, $strid, 'strid_' . $this->lang);
+		$this->redirectFromIdToStrid($this->Article, $strid, 'strid_'.$this->lang);
 
 		$data = $this->Article->findByStrid($strid, $this->lang);
 
@@ -67,19 +64,16 @@ class ArticlesController extends AppController
 			foreach (array_keys($langs) as $lang) {
 				$data = $this->Article->findByStrid($strid, $lang);
 				if ($data && in_array($this->lang, $data['Article']['translated'], true)) {
-					$this->redirect(['action' => 'view', $data['Article']['strid_' . $this->lang]]);
+					$this->redirect(['action' => 'view', $data['Article']['strid_'.$this->lang]]);
 				}
 			}
 
-			$this->redirect(['controller' => 'start', 'action' => 'index', 'lang' => $this->lang]);
-			// throw new NotFoundException();
+			throw new NotFoundException();
 		}
 
 		$breadcrumbs = $this->Article->getFullBreadcrumbs($data['Article']['id'], $this->lang);
-
-		$urls = $this->commanUrlGet($this->lang,$strid,'Article','articles');
-
-		$this->set(compact('data', 'breadcrumbs','urls'));
+		$urls = Sitemap::getLanguageUrls('articles', $this->lang, $strid, 'Article');
+		$this->set(compact('data', 'breadcrumbs', 'urls'));
 	}
 
 	// ~~~ Administration ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -111,9 +105,9 @@ class ArticlesController extends AppController
 			$this->request->data['Article']['date'] = date('Y-m-d');
 		}
 
-		$list_industries = $this->Industry->findList('title_' . $this->lang);
-		$list_articles = $this->Article->findList('title_' . $this->lang, null, ['JSON_CONTAINS(`translated`, \'"' . $this->lang . '"\', "$")']);
-		$list_themes = $this->Theme->findList('title_' . $this->lang, null);
+		$list_industries = $this->Industry->findList('title_'.$this->lang);
+		$list_articles = $this->Article->findList('title_'.$this->lang, null, ['JSON_CONTAINS(`translated`, \'"'.$this->lang.'"\', "$")']);
+		$list_themes = $this->Theme->findList('title_'.$this->lang, null);
 		$this->set(compact('list_industries', 'list_articles', 'list_themes'));
 	}
 
@@ -137,9 +131,9 @@ class ArticlesController extends AppController
 			$this->request->data = $this->Article->getOrFail($id);
 		}
 
-		$list_industries = $this->Industry->findList('title_' . $this->lang);
-		$list_articles = $this->Article->findList('title_' . $this->lang, null, ['JSON_CONTAINS(`translated`, \'"' . $this->lang . '"\', "$")']);
-		$list_themes = $this->Theme->findList('title_' . $this->lang, null);
+		$list_industries = $this->Industry->findList('title_'.$this->lang);
+		$list_articles = $this->Article->findList('title_'.$this->lang, null, ['JSON_CONTAINS(`translated`, \'"'.$this->lang.'"\', "$")']);
+		$list_themes = $this->Theme->findList('title_'.$this->lang, null);
 		$this->set(compact('id', 'list_industries', 'list_articles', 'list_themes'));
 	}
 

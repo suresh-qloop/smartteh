@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="<?= $lang ?>">
+<html>
 <head>
 	<meta charset="UTF-8" />
 	<title><?= $title_for_layout ?> [admin]</title>

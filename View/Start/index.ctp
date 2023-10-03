@@ -1,22 +1,22 @@
 <?php $this->set('title_for_layout', $page_title = 'SmartTEH') ?>
 
-<?php if ($services) : ?>
+<?php if ($services): ?>
 	<?= $this->element('services', ['data' => $services]) ?>
 <?php endif ?>
 
-<?php if ($industries) : ?>
+<?php if ($industries): ?>
 	<?= $this->element('industries', ['data' => $industries]) ?>
 <?php endif ?>
 
-<?php if ($portfolio) : ?>
+<?php if ($portfolio): ?>
 	<?= $this->element('portfolio', ['data' => $portfolio]) ?>
 <?php endif ?>
 
-<?php if ($articles) : ?>
+<?php if ($articles): ?>
 	<?= $this->element('articles', ['data' => $articles]) ?>
 <?php endif ?>
 
-<?php if ($partners) : ?>
+<?php if ($partners): ?>
 	<?= $this->element('partners', ['data' => $partners]) ?>
 <?php endif ?>
 
@@ -42,7 +42,7 @@
 		</div>
 	</section>
 </div>
-<?php if ($certificates) : ?>
+<?php if ($certificates): ?>
 	<?= $this->element('certificates', ['data' => $certificates]) ?>
 <?php endif ?>
 <div class="container" id="contacts">

@@ -41,7 +41,9 @@ class StartController extends AppController
 
 		$is_frontpage = true;
 
-		$this->set(compact('slides', 'industries', 'partners', 'portfolio', 'articles', 'quotes', 'subsections', 'section_headings', 'services', 'certificates', 'is_frontpage'));
+		$urls = Sitemap::getLanguageUrls('start');
+		
+		$this->set(compact('slides', 'industries', 'partners', 'portfolio', 'articles', 'quotes', 'subsections', 'section_headings', 'services', 'certificates', 'is_frontpage', 'urls'));
 
 		if ($this->mobile) {
 			$this->render('mobile/index', 'mobile');

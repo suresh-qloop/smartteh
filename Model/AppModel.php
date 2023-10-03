@@ -587,7 +587,8 @@ class AppModel extends Model
 		$data = $this->get($id, $contain);
 
 		if (!$data) {
-			throw new NotFoundException();
+			$this->redirect(['controller' => 'start', 'action' => 'index', 'lang' => $this->lang]);
+			// throw new NotFoundException();
 		}
 
 		return $data;

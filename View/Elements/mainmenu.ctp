@@ -17,25 +17,24 @@ $active_articles = $c === 'articles';
 
 $category_strid = null;
 
-
 if ($menu_categories) {
-	$category_strid = $menu_categories[0]['Category']['strid_' . $lang];
+	$category_strid = $menu_categories[0]['Category']['strid_'.$lang];
 }
 
 $industry_strid = null;
 
 if ($menu_industries) {
-	$industry_strid = $menu_industries[0]['Industry']['strid_' . $lang];
+	$industry_strid = $menu_industries[0]['Industry']['strid_'.$lang];
 }
 $article_strid = null;
 
 if ($menu_article) {
-	$article_strid = $menu_article[0]['Article']['strid_' . $lang];
+	$article_strid = $menu_article[0]['Article']['strid_'.$lang];
 }
 $service_strid = null;
 
 if ($menu_services) {
-	$service_strid = $menu_services[0]['Service']['strid_' . $lang];
+	$service_strid = $menu_services[0]['Service']['strid_'.$lang];
 }
 
 $items = [];
@@ -114,7 +113,7 @@ $items[] = [
 	<div class="container display-flex">
 
 		<div class="menu-items">
-			<?php foreach ($items as $item) : ?>
+			<?php foreach ($items as $item): ?>
 				<?php
 
 				if ($item['show']) {

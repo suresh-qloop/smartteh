@@ -16,7 +16,6 @@ class ServicesController extends AppController
 	 * @return void
 	 */
 	public function index(): void {
-
 		$data = $this->Service->getFirst();
 
 		if (!$data) {
@@ -24,11 +23,9 @@ class ServicesController extends AppController
 		}
 
 		// to correctly fetch metatags
-		// $this->request->action = 'view';
+		$this->request->action = 'view';
 
-		// $this->view($data['Service']['strid_' . $this->lang]);
-
-		$this->redirect(['action' => 'view', $data['Service']['strid_' . $this->lang]], 301);
+		$this->view($data['Service']['strid_'.$this->lang]);
 	}
 
 	/**
@@ -37,8 +34,7 @@ class ServicesController extends AppController
 	 * @return void
 	 */
 	public function view(string $strid): void {
-		// $this->tempRedirect($this->lang);
-		$this->redirectFromIdToStrid($this->Service, $strid, 'strid_' . $this->lang);
+		$this->redirectFromIdToStrid($this->Service, $strid, 'strid_'.$this->lang);
 
 		$data = $this->Service->findByStrid($strid, $this->lang);
 
@@ -49,29 +45,25 @@ class ServicesController extends AppController
 			foreach (array_keys($langs) as $lang) {
 				$data = $this->Service->findByStrid($strid, $lang);
 				if ($data && in_array($this->lang, $data['Service']['translated'], true)) {
-					$this->redirect(['action' => 'view', $data['Service']['strid_' . $this->lang]]);
+					$this->redirect(['action' => 'view', $data['Service']['strid_'.$this->lang]]);
 				}
 			}
 
-			$this->redirect(['controller' => 'start', 'action' => 'index', 'lang' => $this->lang]);
-			// throw new NotFoundException();
+			throw new NotFoundException();
 		}
 
 		$breadcrumbs = $this->Service->getFullBreadcrumbs($data['Service']['id'], $this->lang);
 
 		$bc = [$data['Service']['id']];
 
-		$heading = $this->Service->getValue($bc[0], 'title_' . $this->lang);
+		$heading = $this->Service->getValue($bc[0], 'title_'.$this->lang);
 
 		$robots_noindex = !in_array($this->lang, $data['Service']['translated'], true);
-		$urls = $this->commanUrlGet($this->lang,$strid,'Service','services');
+
+		$urls = Sitemap::getLanguageUrls('services', $this->lang, $strid, 'Service');
+
 		$this->set(compact(
-			'data',
-			'breadcrumbs',
-			'bc',
-			'heading',
-			'robots_noindex',
-			'urls'
+			'data', 'breadcrumbs', 'bc', 'heading', 'robots_noindex', 'urls'
 		));
 
 		$this->render('view');

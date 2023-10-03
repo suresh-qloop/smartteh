@@ -7,16 +7,16 @@
 <?php endif ?>
 <footer class="page-footer" id="footer">
 	<div class="social-icons">
-		<a class="dont-track" target="_blank" href="https://www.facebook.com/www.smartteh.eu/?eid=ARAMOOI_pygFWX_5bKGEv96XQvTGlcxr66J5JEVPhM_iCNjPw6h3HnPnqxkCvQUv5OO_KRJ03sNx9uJd" aria-label="Facebook url">
+		<a class="dont-track" target="_blank" href="https://www.facebook.com/www.smartteh.eu/?eid=ARAMOOI_pygFWX_5bKGEv96XQvTGlcxr66J5JEVPhM_iCNjPw6h3HnPnqxkCvQUv5OO_KRJ03sNx9uJd">
 			<i class="fa fa-facebook-f" aria-hidden="true"></i>
 		</a>
-		<a class="dont-track" target="_blank" href="https://www.instagram.com/smartteh.eu/" aria-label="Instagaram url">
+		<a class="dont-track" target="_blank" href="https://www.instagram.com/smartteh.eu/">
 			<i class="fa fa-instagram" aria-hidden="true"></i>
 		</a>
-		<a class="dont-track" target="_blank" href="https://www.youtube.com/channel/UC_JssqWfmT3jWyPHjiPuUAw" aria-label="Youtube url">
+		<a class="dont-track" target="_blank" href="https://www.youtube.com/channel/UC_JssqWfmT3jWyPHjiPuUAw">
 			<i class="fa fa-youtube" aria-hidden="true"></i>
 		</a>
-		<a class="dont-track" target="_blank" href="https://www.linkedin.com/company/smartteh/" aria-label="Linkedin url">
+		<a class="dont-track" target="_blank" href="https://www.linkedin.com/company/smartteh/">
 			<i class="fa fa-linkedin" aria-hidden="true"></i>
 		</a>
 	</div>

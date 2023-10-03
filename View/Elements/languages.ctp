@@ -8,7 +8,6 @@
 	$hidden = ['ro'];
 
 	foreach ($languages as $l => $full) {
-
 		if (in_array($l, $hidden)) {
 			continue;
 		}

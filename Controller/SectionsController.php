@@ -16,9 +16,7 @@ class SectionsController extends AppController
 	 * @param string $strid
 	 */
 	public function view(string $strid): void {
-
-		// $this->tempRedirect($this->lang);
-		$this->redirectFromIdToStrid($this->Section, $strid, 'strid_' . $this->lang);
+		$this->redirectFromIdToStrid($this->Section, $strid, 'strid_'.$this->lang);
 
 		$data = $this->Section->findByStrid($strid, $this->lang);
 
@@ -29,20 +27,20 @@ class SectionsController extends AppController
 			foreach (array_keys($langs) as $lang) {
 				$data = $this->Section->findByStrid($strid, $lang);
 				if ($data) {
-					$this->redirect(['action' => 'view', $data['Section']['strid_' . $this->lang]], 301);
+					$this->redirect(['action' => 'view', $data['Section']['strid_'.$this->lang]], 301);
 				}
 			}
 
-			$this->redirect(['controller' => 'start', 'action' => 'index', 'lang' => $this->lang]);
-			// throw new NotFoundException();
+			throw new NotFoundException();
 		}
 
 
 		if (!$data) {
 			throw new NotFoundException();
 		}
-		$urls = $this->commanUrlGet($this->lang,$strid,'Section','sections');
-		$this->set(compact('data','urls'));
+
+		$urls = Sitemap::getLanguageUrls('sections', $this->lang, $strid, 'Section');
+		$this->set(compact('data', 'urls'));
 	}
 
 	// ~~~ Administration ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

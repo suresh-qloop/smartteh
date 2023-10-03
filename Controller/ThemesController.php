@@ -15,10 +15,8 @@ class ThemesController extends AppController
 	 */
 	public function index(): void {
 		$data = $this->Theme->findAll($this, 5);
-
-		$urls = $this->commanIndexUrlGet('themes');
-
-		$this->set(compact('data','urls'));
+		$urls = Sitemap::getLanguageUrls('themes');
+		$this->set(compact('data', 'urls'));
 	}
 
 	/**
@@ -48,8 +46,9 @@ class ThemesController extends AppController
 
 			throw new NotFoundException();
 		}
-		$urls = $this->commanUrlGet($this->lang,$strid,'Theme','themes');
-		$this->set(compact('data', 'articles','urls'));
+
+		$urls = Sitemap::getLanguageUrls('themes', $this->lang, $strid, 'Theme');
+		$this->set(compact('data', 'articles', 'urls'));
 		$this->render('view');
 	}
 

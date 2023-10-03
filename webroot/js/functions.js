@@ -278,7 +278,7 @@ $(document).ready(function () {
 				$('#callbacksSubmit').removeAttr('disabled');
 			},
 			type: "POST",
-			url: "/callbacks"
+			url: "/smartteh/callbacks"
 		});
 		return false;
 	});

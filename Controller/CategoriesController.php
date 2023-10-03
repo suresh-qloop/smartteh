@@ -22,7 +22,7 @@ class CategoriesController extends AppController
 			throw new NotFoundException();
 		}
 
-		$this->redirect(['action' => 'view', $data['Category']['strid_' . $this->lang]], 301);
+		$this->redirect(['action' => 'view', $data['Category']['strid_'.$this->lang]], 301);
 	}
 
 	/**
@@ -31,8 +31,7 @@ class CategoriesController extends AppController
 	 * @return void
 	 */
 	public function view(string $strid): void {
-		// $this->tempRedirect($this->lang);
-		$this->redirectFromIdToStrid($this->Category, $strid, 'strid_' . $this->lang);
+		$this->redirectFromIdToStrid($this->Category, $strid, 'strid_'.$this->lang);
 
 		$data = $this->Category->findByStrid($strid, $this->lang);
 
@@ -43,18 +42,17 @@ class CategoriesController extends AppController
 			foreach (array_keys($langs) as $lang) {
 				$data = $this->Category->findByStrid($strid, $lang);
 				if ($data && in_array($this->lang, $data['Category']['translated'], true)) {
-					$this->redirect(['action' => 'view', $data['Category']['strid_' . $this->lang]]);
+					$this->redirect(['action' => 'view', $data['Category']['strid_'.$this->lang]]);
 				}
 			}
 
-			$this->redirect(['controller' => 'start', 'action' => 'index', 'lang' => $this->lang]);
-			// throw new NotFoundException();
+			throw new NotFoundException();
 		}
 
 		$page_header_image = $this->Category->getHeaderImage($data);
 
 		$bc = $this->Category->getBreadcrumbs($data['Category']['id']);
-		$heading = $this->Category->getValue($bc[0], 'title_' . $this->lang);
+		$heading = $this->Category->getValue($bc[0], 'title_'.$this->lang);
 
 		$subcategories = $this->Category->getChildren($data['Category']['id']);
 		$products = $this->Product->getAllActiveInCategory($this->lang, $data['Category']['id']);
@@ -63,18 +61,11 @@ class CategoriesController extends AppController
 
 		$breadcrumbs = $this->Category->getFullBreadcrumbs($data['Category']['id'], $this->lang);
 
-		$urls = $this->commanUrlGet($this->lang,$strid,'Category','categories');
+		$urls = Sitemap::getLanguageUrls('categories', $this->lang, $strid, 'Category');
 
 		$this->set(compact(
-			'data',
-			'bc',
-			'heading',
-			'subcategories',
-			'products',
-			'page_header_image',
-			'robots_noindex',
-			'breadcrumbs',
-			'urls'
+			'data', 'bc', 'heading', 'subcategories', 'products', 'page_header_image', 'robots_noindex',
+			'breadcrumbs', 'urls'
 		));
 
 		$this->render('view');
@@ -106,7 +97,7 @@ class CategoriesController extends AppController
 			}
 		}
 
-		$list_categories = $this->Category->findThreadedList(null, 'title_' . $this->lang);
+		$list_categories = $this->Category->findThreadedList(null, 'title_'.$this->lang);
 		$this->set(compact('list_categories'));
 	}
 
@@ -129,7 +120,7 @@ class CategoriesController extends AppController
 			$this->request->data = $this->Category->getOrFail($id);
 		}
 
-		$list_categories = $this->Category->findThreadedList(null, 'title_' . $this->lang);
+		$list_categories = $this->Category->findThreadedList(null, 'title_'.$this->lang);
 		$this->set(compact('list_categories', 'id'));
 	}
 

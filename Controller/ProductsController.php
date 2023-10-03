@@ -20,12 +20,11 @@ class ProductsController extends AppController
 	 * @return void
 	 */
 	public function view(string $strid): void {
-		// $this->tempRedirect($this->lang);
 		if (empty($strid)) {
 			$this->redirect(['controller' => 'industries', 'action' => 'index'], 301);
 		}
 
-		$this->redirectFromIdToStrid($this->Product, $strid, 'strid_' . $this->lang);
+		$this->redirectFromIdToStrid($this->Product, $strid, 'strid_'.$this->lang);
 
 		$data = $this->Product->getFull($strid, $this->lang);
 
@@ -36,19 +35,18 @@ class ProductsController extends AppController
 			foreach (array_keys($langs) as $lang) {
 				$data = $this->Product->getFull($strid, $lang);
 				if ($data && in_array($this->lang, $data['Product']['translated'], true)) {
-					$this->redirect(['action' => 'view', $data['Product']['strid_' . $this->lang]]);
+					$this->redirect(['action' => 'view', $data['Product']['strid_'.$this->lang]]);
 				}
 			}
 
-			$this->redirect(['controller' => 'start', 'action' => 'index', 'lang' => $this->lang]);
-			// throw new NotFoundException();
+			throw new NotFoundException();
 		}
 
 		$from = $this->request->query['from'] ?? '';
 
 		$canonical = $from ? ['controller' => 'products', 'action' => 'view', $strid] : null;
 		$robots_noindex = !in_array($this->lang, $data['Product']['translated'], true);
-		$urls = $this->commanUrlGet($this->lang,$strid,'Product','products');
+		$urls = Sitemap::getLanguageUrls('products', $this->lang, $strid, 'Product');
 
 		if (!in_array($from, ['category', 'industry'])) {
 			$from = 'category';
@@ -56,26 +54,19 @@ class ProductsController extends AppController
 
 		if ($from === 'industry' && $data['Industry']['id']) {
 			$bc = [$data['Industry']['id']];
-			$heading = $this->Industry->getValue($bc[0], 'title_' . $this->lang);
+			$heading = $this->Industry->getValue($bc[0], 'title_'.$this->lang);
 			$page_header_image = $this->Industry->getHeaderImage($data);
 			$breadcrumbs = $this->Industry->getFullBreadcrumbs($data['Industry']['id'], $this->lang);
 		} else {
 			$bc = $this->Category->getBreadcrumbs($data['Category']['id']);
-			$heading = $this->Category->getValue($bc[0], 'title_' . $this->lang);
+			$heading = $this->Category->getValue($bc[0], 'title_'.$this->lang);
 			$page_header_image = $this->Category->getHeaderImage($data);
 			$breadcrumbs = $this->Category->getFullBreadcrumbs($data['Category']['id'], $this->lang);
 		}
 
 		$this->set(compact(
-			'data',
-			'bc',
-			'heading',
-			'from',
-			'page_header_image',
-			'canonical',
-			'robots_noindex',
-			'breadcrumbs',
-			'urls'
+			'data', 'bc', 'heading', 'from', 'page_header_image', 'canonical', 'robots_noindex',
+			'breadcrumbs', 'urls'
 		));
 	}
 
@@ -88,21 +79,18 @@ class ProductsController extends AppController
 	 * @throws Exception
 	 */
 	public function pdf(string $strid): void {
-		
 		$download = true;
 
 		$data = $this->Product->getFull($strid);
 
 		if (!$data) {
-			$this->redirect($this->referer());
-			// throw new NotFoundException();
+			throw new NotFoundException();
 		}
 
 		$html_file = $this->preparePdfFile($data);
 
 		if (!$html_file) {
-			$this->redirect($this->referer());
-			// throw new RuntimeException('Could not generate/save html file', 1);
+			throw new RuntimeException('Could not generate/save html file', 1);
 		}
 
 		$this->autoRender = false;
@@ -111,7 +99,7 @@ class ProductsController extends AppController
 
 		$xvfb = env('XVFB_PATH');
 		if ($xvfb) {
-			$wkhtmltopdf = $xvfb . ' --server-args="-screen 0, 1024x768x24" ' . env('WKHTMLTOPDF_PATH');
+			$wkhtmltopdf = $xvfb.' --server-args="-screen 0, 1024x768x24" '.env('WKHTMLTOPDF_PATH');
 		} else {
 			$wkhtmltopdf = env('WKHTMLTOPDF_PATH');
 		}
@@ -134,11 +122,11 @@ class ProductsController extends AppController
 
 		Utils::deleteNode($html_file);
 
-		$filename = $data['Product']['strid_' . $this->lang] . '.pdf';
+		$filename = $data['Product']['strid_'.$this->lang].'.pdf';
 		if ($download) {
-			header('Content-Disposition: attachment; filename="' . $filename . '"');
+			header('Content-Disposition: attachment; filename="'.$filename.'"');
 		} else {
-			header('Content-Disposition: inline; filename="' . $filename . '"');
+			header('Content-Disposition: inline; filename="'.$filename.'"');
 		}
 
 		header('Content-type: application/pdf');
@@ -159,11 +147,10 @@ class ProductsController extends AppController
 		$this->autoRender = false;
 
 		$data['Product'] = $this->Product->relativePathsToAbsolute(
-			$data['Product'],
-			['description_' . $this->lang]
+			$data['Product'], ['description_'.$this->lang]
 		);
 
-		$filename = APP . 'tmp' . DS . 'generated' . DS . 'products' . DS . str_replace('.', '', microtime(true)) . '.html';
+		$filename = APP.'tmp'.DS.'generated'.DS.'products'.DS.str_replace('.', '', microtime(true)).'.html';
 
 		// main
 		$view = new View($this);
@@ -201,7 +188,7 @@ class ProductsController extends AppController
 		if ($this->Product->validates()) {
 			$email = $this->request->data('Product.share_email');
 
-			$data['Product'] = $this->Product->relativePathsToAbsolute($data['Product'], ['description_' . $this->lang]);
+			$data['Product'] = $this->Product->relativePathsToAbsolute($data['Product'], ['description_'.$this->lang]);
 
 			$subsection = $this->Subsection->findByTag($this->lang, 'share_product_intro');
 			if ($subsection) {
@@ -215,7 +202,7 @@ class ProductsController extends AppController
 
 			$sent = $this->sendEmail([
 				'to' => $email,
-				'subject' => 'SmartTEH - ' . $data['Product']['title_' . $this->lang],
+				'subject' => 'SmartTEH - '.$data['Product']['title_'.$this->lang],
 				'template' => 'product_share'
 			], $vars);
 
@@ -262,8 +249,8 @@ class ProductsController extends AppController
 			}
 		}
 
-		$list_categories = $this->Category->findThreadedList(null, 'title_' . $this->lang);
-		$list_industries = $this->Industry->findList('title_' . $this->lang);
+		$list_categories = $this->Category->findThreadedList(null, 'title_'.$this->lang);
+		$list_industries = $this->Industry->findList('title_'.$this->lang);
 		$this->set(compact('list_categories', 'list_industries'));
 	}
 
@@ -286,8 +273,8 @@ class ProductsController extends AppController
 			$this->request->data = $this->Product->getOrFail($id);
 		}
 
-		$list_categories = $this->Category->findThreadedList(null, 'title_' . $this->lang);
-		$list_industries = $this->Industry->findList('title_' . $this->lang);
+		$list_categories = $this->Category->findThreadedList(null, 'title_'.$this->lang);
+		$list_industries = $this->Industry->findList('title_'.$this->lang);
 		$this->set(compact('list_categories', 'list_industries', 'id'));
 	}
 

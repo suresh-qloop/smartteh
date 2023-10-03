@@ -5,7 +5,6 @@ if (!isset($button)) {
 }
 
 ?>
-
 <?= $this->Form->create('Contacts', ['url' => ['action' => 'index'], 'class' => 'form']) ?>
 
 <?= $this->Form->hidden('request_hash', ['value' => md5(Utils::uuid4())]) ?>
@@ -14,31 +13,27 @@ if (!isset($button)) {
 <?= $this->Form->input('name', [
 	'placeholder' => __('Uzņēmums'),
 	'required' => true,
-	'label' => false,
-	'id'=>'name',
+	'label' => false
 ]) ?>
 
 <?= $this->Form->input('email', [
 	'placeholder' => __('E-pasts'),
 	'required' => true,
-	'label' => false,
-	'id'=>'email',
+	'label' => false
 ]) ?>
 
 <?php if (!empty($show_phone)): ?>
 	<?= $this->Form->input('phone', [
 		'placeholder' => __('Telefons'),
 		'required' => false,
-		'label' => false,
-		'id'=>'phone',
+		'label' => false
 	]) ?>
 <?php endif ?>
 
 <?= $this->Form->input('text', [
 	'placeholder' => __('Ziņa'),
 	'required' => true,
-	'label' => false,
-	'id'=>'text',
+	'label' => false
 ]) ?>
 
 <?= $this->Form->input('comment', [
@@ -47,22 +42,19 @@ if (!isset($button)) {
 	'type' => 'textarea',
 	'required' => false,
 	'label' => false,
-	'div' => false,
-	'id'=>'comment',
+	'div' => false
 ]) ?>
 
 <?= $this->Form->input('get_news', [
 	'type' => 'checkbox',
 	'required' => false,
 	'label' => __('Vēlos saņemt jaunumus'),
-	'style' => 'margin:0 10px 0 5px',
-	'id'=>'checkbox',
+	'style' => 'margin:0 10px 0 5px'
 ]) ?>
 
 <?php if (!empty($product_id)): ?>
 	<?= $this->Form->hidden('product_id', [
-		'value' => $product_id,
-		'id'=>'productid',
+		'value' => $product_id
 	]) ?>
 <?php endif ?>
 

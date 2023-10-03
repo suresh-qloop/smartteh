@@ -25,15 +25,14 @@ class IndustriesController extends AppController
 		// to correctly fetch metatags
 		$this->request->action = 'view';
 
-		$this->view($data['Industry']['strid_' . $this->lang]);
+		$this->view($data['Industry']['strid_'.$this->lang]);
 	}
 
 	/**
 	 * @param string $strid
 	 */
 	public function view(string $strid): void {
-		// $this->tempRedirect($this->lang);
-		$this->redirectFromIdToStrid($this->Industry, $strid, 'strid_' . $this->lang);
+		$this->redirectFromIdToStrid($this->Industry, $strid, 'strid_'.$this->lang);
 
 		$data = $this->Industry->findByStrid($strid, $this->lang);
 
@@ -44,19 +43,18 @@ class IndustriesController extends AppController
 			foreach (array_keys($langs) as $lang) {
 				$data = $this->Industry->findByStrid($strid, $lang);
 				if ($data && in_array($this->lang, $data['Industry']['translated'], true)) {
-					$this->redirect(['action' => 'view', $data['Industry']['strid_' . $this->lang]]);
+					$this->redirect(['action' => 'view', $data['Industry']['strid_'.$this->lang]]);
 				}
 			}
 
-			$this->redirect(['controller' => 'start', 'action' => 'index', 'lang' => $this->lang]);
-			// throw new NotFoundException();
+			throw new NotFoundException();
 		}
 
 		$page_header_image = $this->Industry->getHeaderImage($data);
-		
+
 		$bc = [$data['Industry']['id']];
 
-		$heading = $this->Industry->getValue($bc[0], 'title_' . $this->lang);
+		$heading = $this->Industry->getValue($bc[0], 'title_'.$this->lang);
 
 		$products = $this->Product->getAllActiveInIndustry($this->lang, $data['Industry']['id']);
 
@@ -68,19 +66,10 @@ class IndustriesController extends AppController
 
 		$breadcrumbs = $this->Industry->getFullBreadcrumbs($data['Industry']['id'], $this->lang);
 
-		$urls = $this->commanUrlGet($this->lang,$strid,'Industry','industries');
+		$urls = Sitemap::getLanguageUrls('industries', $this->lang, $strid, 'Industry');
 
 		$this->set(compact(
-			'data',
-			'bc',
-			'heading',
-			'products',
-			'portfolio',
-			'articles',
-			'page_header_image',
-			'robots_noindex',
-			'breadcrumbs',
-			'urls',
+			'data', 'bc', 'heading', 'products', 'portfolio', 'articles', 'page_header_image', 'robots_noindex', 'breadcrumbs', 'urls'
 		));
 
 		$this->render('view');

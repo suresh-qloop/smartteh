@@ -3,6 +3,7 @@
 App::uses('Controller', 'Controller');
 App::uses('L10n', 'I18n');
 App::uses('EmailTask', 'Console/Command/Task');
+App::import('Model', 'Sitemap');
 
 class AppController extends Controller
 {
@@ -29,12 +30,11 @@ class AppController extends Controller
 	 * @return void
 	 */
 	public function beforeFilter() {
-
 		$this->loadLanguage();
 
 		// if user is not admin but is trying to open admin page, redirect to login
 		if ($this->request->admin && !$this->Session->check('Admin')) {
-			$this->Session->write('admin_redirect', '/' . $this->request->url);
+			$this->Session->write('admin_redirect', '/'.$this->request->url);
 			$this->redirect(['admin' => false, 'controller' => 'admins', 'action' => 'login']);
 		} elseif ($this->request->is('ajax')) {
 			$this->layout = 'ajax';
@@ -43,86 +43,6 @@ class AppController extends Controller
 		} else {
 			$this->mobile = $this->request->isMobile() || str_starts_with(env('HTTP_HOST'), 'm.');
 		}
-	}
-
-	// public function tempRedirect($language) {
-	// 	$supportedLanguages = array("en", "lv");
-
-	// 	if (!in_array($language, $supportedLanguages)) {
-	// 		$redirect = ['controller' => 'start', 'action' => 'index', 'lang' => $language];
-	// 		$this->redirect($redirect);
-	// 	}
-	// }
-
-	public function commanIndexUrlGet($controller) {
-		
-		$this->langs = array_keys(Configure::read('Languages.all'));
-		$urls = [];
-
-		foreach ($this->langs as $lang) {
-			$url = [
-				'lang' =>$lang,
-				'loc' => rtrim(Router::url(['lang' => $lang, 'controller' => $controller, 'action' => 'index'], true), '/'),
-			];
-
-			if ($this->output_related_langs) {
-				$url['xhtml:link'] = [];
-				foreach ($this->relatedLangs($lang) as $related_lang) {
-					$url['xhtml:link'][] = [
-						'@href' => Router::url(['lang' => $related_lang, 'controller' => $controller, 'action' => 'index'], true)
-					];
-				}
-			}
-			$urls[] = $url;
-		}
-		return $urls;
-	}
-
-	public function commanUrlGet($language,$slug,$model,$controller) {
-
-		$urls = [];
-		$this->langs = array_keys(Configure::read('Languages.all'));
-		
-		$fields = array_map(static function ($lang) {
-			return 'strid_' . $lang;
-		}, $this->langs);
-		$fields[] = 'translated';
-
-		$conditions['strid_'. $language] = $slug;
-
-		if ($model != 'Section') {
-			$conditions['enabled'] = 1;
-		} 
-
-		$data = $this->$model->find('all', [
-			'conditions' => $conditions,
-			'fields' => $fields
-		]);
-
-		foreach ($data as $v) {
-			$langs = array_intersect($this->langs, $v[$model]['translated']);
-
-			foreach ($langs as $lang) {
-				$url = [
-					'lang' =>$lang,
-					'loc' => Router::url(['lang' => $lang, 'controller' => $controller, 'action' => 'view', $v[$model]['strid_' . $lang]], true)
-				];
-
-				if ($this->output_related_langs) {
-					$related_langs = array_intersect($this->relatedLangs($lang), $v[$model]['translated']);
-					if ($related_langs) {
-						foreach ($related_langs as $related_lang) {
-							$url[] = [
-								'@href' => Router::url(['lang' => $related_lang, 'controller' => $controller, 'action' => 'view', $v[$model]['strid_' . $related_lang]], true)
-							];
-						}
-					}
-				}
-
-				$urls[] = $url;
-			}
-		}
-		return $urls;
 	}
 
 	/**
@@ -351,7 +271,7 @@ class AppController extends Controller
 	 * If request is GET, load data from Filter.X session into request->data object
 	 */
 	public function manageSearchRequest() {
-		$key = 'Filter.' . $this->request->controller . '.' . $this->request->action;
+		$key = 'Filter.'.$this->request->controller.'.'.$this->request->action;
 
 		if ($this->request->is(['post', 'put'])) {
 			$search = $this->request->data;
@@ -393,9 +313,9 @@ class AppController extends Controller
 				$redirect = $this->referer();
 			} elseif (is_string($redirect) && $this->request->is('ajax')) {
 				if (!str_contains($redirect, '?')) {
-					$redirect .= '?dnc=' . mt_rand();
+					$redirect .= '?dnc='.mt_rand();
 				} else {
-					$redirect .= '&dnc=' . mt_rand();
+					$redirect .= '&dnc='.mt_rand();
 				}
 			}
 		} elseif (!$redirect) {
@@ -496,19 +416,19 @@ class AppController extends Controller
 		$output = [];
 		$exit_code = [];
 
-		exec($command . ' 2>&1', $output, $exit_code);
+		exec($command.' 2>&1', $output, $exit_code);
 
 		if ($exit_code !== 0) {
 			echo '<pre>';
 			echo "<b>Command:</b>\n";
-			echo $command . "\n\n";
+			echo $command."\n\n";
 			echo "<b>Exit code:</b>\n";
-			echo $exit_code . "\n\n";
+			echo $exit_code."\n\n";
 			echo "<b>Error:</b>\n";
 			pr(trim(implode("\n", $output)));
 			echo '</pre>';
 
 			throw new RuntimeException('');
 		}
-	}
+	}	
 }
