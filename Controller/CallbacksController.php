@@ -32,12 +32,11 @@ class CallbacksController extends AppController
 			'title' => $this->request->data('Callbacks.name'), // Deal title
 			'd70ec9ad9023ae81e7d60f7c0f7aac704d093180' => $this->request->data('Callbacks.phone'), // phone no field
 			'7d3852b061e86a3770e2eec0d3c0a4203a638436' => $this->request->data('Callbacks.question'), // question field
-			// 'value' => 0, // Phone numbers
+			'b89ee512f8c3dcb1643e6a73eb8a28af1f2d81a1' => $this->request->data('Callbacks.company'), // company field
+			'9375269fd5ce2d443b55aef3df8e22e9c7d738a9' => $this->request->data('Callbacks.email'), // email field
 		]);
 
 		if (!$existing && $this->Callbacks->save($this->request->data)) {
-
-			// $this->redirect(['controller' => 'start', 'action' => 'index', 'lang' => $this->lang]);
 
 			$this->notifyAdminViaEmail($this->Callbacks->id);
 

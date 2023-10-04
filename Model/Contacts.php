@@ -8,7 +8,7 @@ class Contacts extends AppModel
 	public $name = 'Contacts';
 
 	public $belongsTo = [
-		'Product'
+		'Product',
 	];
 
 	// do not remove or set to null
@@ -30,30 +30,30 @@ class Contacts extends AppModel
 		$this->validate = [
 			'name' => [
 				'rule' => ['minLength', '1'],
-				'message' => __('Lūdzu, ievadiet uzņēmuma nosaukumu')
+				'message' => __('Lūdzu, ievadiet uzņēmuma nosaukumu'),
 			],
 			'email' => [
 				'rule' => 'email',
 				'allowEmpty' => false,
-				'message' => __('Lūdzu, ievadiet korektu e-pastu')
+				'message' => __('Lūdzu, ievadiet korektu e-pastu'),
 			],
 			'text' => [
 				'rule1' => [
 					'rule' => ['minLength', 1],
-					'message' => __('Lūdzu, ievadiet ziņas tekstu')
+					'message' => __('Lūdzu, ievadiet ziņas tekstu'),
 				],
 				'rule2' => [
 					'rule' => ['validateNoLinks'],
 					'allowEmpty' => false,
-					'message' => __('Linki nav atļauti')
-				]
+					'message' => __('Linki nav atļauti'),
+				],
 			],
 			'comment' => [
 				// antispam measure - field must exist and must be empty
 				'rule' => ['lengthBetween', 0, 0],
 				'message' => __('Spams!'),
-				'required' => true
-			]
+				'required' => true,
+			],
 		];
 
 		return parent::beforeValidate($options);
@@ -77,7 +77,7 @@ class Contacts extends AppModel
 			'conditions' => $conditions,
 			'order' => ['Contacts.created' => 'desc'],
 			'contain' => ['Product'],
-			'limit' => $limit
+			'limit' => $limit,
 		];
 
 		return $Controller->paginate();
@@ -102,6 +102,10 @@ class Contacts extends AppModel
 	 */
 	public function sendToAmoCrm(int $id): void {
 		if (!env('AMOCRM_HOST') || !env('AMOCRM_LOGIN') || !env('AMOCRM_API_KEY')) {
+			if (env('APP_ENV') !== 'production') {
+				return;
+			}
+
 			throw new Exception('Some of the AMOCRM variables are not defined');
 		}
 
@@ -119,7 +123,7 @@ class Contacts extends AppModel
 			'headers' => [
 				'User-Agent' => 'amoCRM-API-client/1.0',
 				'Accept' => 'application/json',
-			]
+			],
 		]);
 
 		$contents = json_decode($res->getBody()->getContents(), true);

@@ -101,6 +101,10 @@ class Callbacks extends AppModel
 	 */
 	public function sendToAmoCrm(int $id): void {
 		if (!env('AMOCRM_HOST') || !env('AMOCRM_LOGIN') || !env('AMOCRM_API_KEY')) {
+			if (env('APP_ENV') !== 'production') {
+				return;
+			}
+
 			throw new Exception('Some of the AMOCRM variables are not defined');
 		}
 

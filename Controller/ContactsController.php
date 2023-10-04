@@ -44,7 +44,6 @@ class ContactsController extends AppController
 			$this->notifyAdminViaEmail($this->Contacts->id);
 
 			if (!env('APP_DEBUG')) {
-				// $this->redirect(['controller' => 'start', 'action' => 'index', 'lang' => $this->lang]);
 				$this->Contacts->sendToAmoCrm($this->Contacts->id);
 			}
 			$this->set(['success' => true, 'hash' => md5(Utils::uuid4())]);
